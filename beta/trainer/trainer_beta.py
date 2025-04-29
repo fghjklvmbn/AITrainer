@@ -30,9 +30,11 @@ def build_trainer(config, dataset, training_args):
 
     # --- Tokenization
     def tokenize_function(examples):
-        return tokenizer(
+        output = tokenizer(
             examples["text"], truncation=True, padding="max_length", max_length=512
         )
+        output["labels"] = output["input_ids"].copy()
+        return output
 
     tokenized_dataset = dataset.map(tokenize_function, batched=True)
 

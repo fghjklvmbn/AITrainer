@@ -5,7 +5,7 @@ from config_loader import load_config
 from transformers import TrainingArguments
 
 def run_training():
-    config = load_config('config/train_beta.yaml')
+    config = load_config('config/train_beta_qwen.yaml')
 
     set_random_seed(config.get('seed', 42))
 
@@ -17,11 +17,12 @@ def run_training():
         save_strategy="steps",
         save_steps=500,
         eval_steps=500,
-        per_device_train_batch_size=config.get('train_batch_size', 2),
-        per_device_eval_batch_size=config.get('eval_batch_size', 2),
-        num_train_epochs=config.get('epochs', 3),
+        per_device_train_batch_size=1,
+        per_device_eval_batch_size=1,
+        gradient_accumulation_steps=8,
+        num_train_epochs=3,
         logging_steps=100,
-        learning_rate=config.get('learning_rate', 5e-4),
+        learning_rate=2e-5,
         report_to="none",
     )
 
