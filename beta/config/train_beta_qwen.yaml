@@ -1,4 +1,4 @@
-model_name_or_path: "Qwen/Qwen2.5-7B"
+model_name_or_path: "Qwen/Qwen2.5-0.5B"
 train_batch_size: 2
 eval_batch_size: 2
 epochs: 3
