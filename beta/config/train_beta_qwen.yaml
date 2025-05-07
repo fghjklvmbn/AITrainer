@@ -1,9 +1,11 @@
+model_type: "qwen"
 model_name_or_path: "Qwen/Qwen2.5-0.5B"
-train_batch_size: 2
-eval_batch_size: 2
+train_data_dir: "../../data/json_files"
+batch_size: 2
 epochs: 3
 learning_rate: 5e-4
 seed: 42
+max_length: 512
 
 lora_r: 8
 lora_alpha: 16
