@@ -1,5 +1,4 @@
-Flask
-torch
 transformers==4.49.0
 peft
 datasets
+pyyaml
