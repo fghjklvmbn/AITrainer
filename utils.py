@@ -1,7 +1,7 @@
 import yaml
 
 def load_config(path_config):
-    with open(path_config, "r") as config:
+    with open(path_config, "r", encoding="utf-8") as config:
         args = yaml.safe_load(config)
     args = DotDict(args)
     # print(args)
