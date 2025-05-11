@@ -1,0 +1,14 @@
+AITrainer 베타
+
+
+윈도우 환경에서 llama 훈련시 CMake설치 필요
+
+CMake
+https://cmake.org/download/
+
+C++ Bulid Tools(visual-cpp-build-tools)
+https://visualstudio.microsoft.com/ko/visual-cpp-build-tools/
+
+
+sentencepiece 설치 
+conda install -c conda-forge sentencepiece

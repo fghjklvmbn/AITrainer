@@ -1,6 +1,6 @@
-# run_beta.py
-
 import argparse
+import yaml
+import chardet
 from models.qwen.trainer import QwenTrainer
 from models.llama.trainer import LlamaTrainer
 
@@ -17,8 +17,7 @@ if __name__ == "__main__":
     parser.add_argument("-c", "--config", required=True, help="Path to YAML config")
     args = parser.parse_args()
 
-    with open(args.config, "r") as f:
-        import yaml
+    with open(args.config, "r", encoding="utf-8") as f:
         config = yaml.safe_load(f)
 
     model_type = config.get("model_type")

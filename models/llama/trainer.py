@@ -1,13 +1,11 @@
-# trainer_qwen/trainer_qwen.py
-
-from ..trainer import build_trainer
+from .train import build_trainer
 from datasets import load_dataset
 from transformers import TrainingArguments
 import yaml
 
 class LlamaTrainer:
     def __init__(self, config_path):
-        with open(config_path, "r") as f:
+        with open(config_path, "r", encoding="utf-8") as f:
             self.config = yaml.safe_load(f)
 
     def train(self):
