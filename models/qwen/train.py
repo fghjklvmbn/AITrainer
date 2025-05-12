@@ -2,7 +2,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer
 from peft import prepare_model_for_kbit_training, LoraConfig, get_peft_model
 import torch
 
-def build_trainer(config, raw_dataset, training_args):
+def build_trainer(config, dataset, training_args):
     # --- 모델 및 토크나이저 로딩
     model = AutoModelForCausalLM.from_pretrained(
         config["model_name_or_path"],
@@ -28,10 +28,21 @@ def build_trainer(config, raw_dataset, training_args):
     model = get_peft_model(model, lora_config)
     model.print_trainable_parameters()
 
-    dataset = raw_dataset["train"]
+    # 평가 지표 계산 함수
+    def compute_metrics(eval_pred):
+        logits, labels = eval_pred
+        loss_fn = torch.nn.CrossEntropyLoss()
+        logits = torch.tensor(logits).to(DEVICE)
+        labels = torch.tensor(labels).to(DEVICE)
+        loss = loss_fn(logits.view(-1, logits.size(-1)), labels.view(-1))
+        return {"eval_loss": loss.item()}
+
     # --- Tokenization
+    # TODO: 베이스를 기반으로 tokenizer를 설정할 수 있도록 수정필요 
     def tokenize_function(examples):
         # prompt 형식 구성
+        dataset = dataset.from_list(data)
+        split_data = dataset.train_test_split(test_size=0.0003)
         prompts = []
         for instr, inp in zip(examples["instruction"], examples["input"]):
             if inp:
@@ -55,13 +66,16 @@ def build_trainer(config, raw_dataset, training_args):
         tokenized["labels"] = tokenized["input_ids"].copy()
         return tokenized
 
-    tokenized_dataset = dataset.map(tokenize_function, batched=True)
+    # tokenized_dataset = dataset.map(tokenize_function, batched=True)
+    tokenized_train_dataset = split_data["train"].map(tokenize_function)
+    tokenized_val_dataset = split_data["test"].map(tokenize_function)
 
     trainer = Trainer(
         model=model,
         args=training_args,
-        train_dataset=tokenized_dataset,
-        eval_dataset=tokenized_dataset,
+        train_dataset=tokenized_train_dataset,
+        eval_dataset=tokenized_val_dataset,
         tokenizer=tokenizer,
+        compute_metrics=compute_metrics,
     )
     return trainer
