@@ -1,6 +1,5 @@
 import argparse
 import yaml
-import chardet
 from models.qwen.trainer import QwenTrainer
 from models.llama.trainer import LlamaTrainer
 

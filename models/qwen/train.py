@@ -1,8 +1,12 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer
+from datasets import Dataset
 from peft import prepare_model_for_kbit_training, LoraConfig, get_peft_model
 import torch
 
-def build_trainer(config, dataset, training_args):
+# 장치 설정 (맥 용 MPS 혹은 Nvidia GPU 사용 가능 시 사용)
+DEVICE = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
+
+def build_trainer(config, data, training_args):
     # --- 모델 및 토크나이저 로딩
     model = AutoModelForCausalLM.from_pretrained(
         config["model_name_or_path"],
@@ -37,34 +41,32 @@ def build_trainer(config, dataset, training_args):
         loss = loss_fn(logits.view(-1, logits.size(-1)), labels.view(-1))
         return {"eval_loss": loss.item()}
 
+    # 쪼갠 데이터셋 정의
+    dataset_list = Dataset.from_list(data)
+    split_data = dataset_list.train_test_split(test_size=0.0003)
+
     # --- Tokenization
     # TODO: 베이스를 기반으로 tokenizer를 설정할 수 있도록 수정필요 
     def tokenize_function(examples):
         # prompt 형식 구성
-        dataset = dataset.from_list(data)
-        split_data = dataset.train_test_split(test_size=0.0003)
-        prompts = []
-        for instr, inp in zip(examples["instruction"], examples["input"]):
-            if inp:
-                prompt = f"### Instruction:\n{instr}\n\n### Input:\n{inp}\n\n### Response:\n"
-            else:
-                prompt = f"### Instruction:\n{instr}\n\n### Response:\n"
-            prompts.append(prompt)
-    
-        # 정답과 연결 (Prompt + Output)
-        full_texts = [p + o for p, o in zip(prompts, examples["output"])]
-
+        prompt = examples["instruction"] + " " + examples["input"]
+        inputs = tokenizer(
+            prompt, 
+            truncation=True, 
+            padding="max_length", 
+            max_length=128
+        )
         # 토크나이즈
         tokenized = tokenizer(
-            full_texts,
+            examples["output"],
             truncation=True,
             padding="max_length",
             max_length=config.get("max_length", 512)
         )
-
-        # labels로 input_ids 복사
-        tokenized["labels"] = tokenized["input_ids"].copy()
-        return tokenized
+        tokenized = tokenizer(examples["output"], truncation=True, padding="max_length", max_length=128)
+        inputs["labels"] = tokenized["input_ids"]
+        return inputs
+    
 
     # tokenized_dataset = dataset.map(tokenize_function, batched=True)
     tokenized_train_dataset = split_data["train"].map(tokenize_function)
