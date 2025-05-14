@@ -23,7 +23,7 @@ class QwenTrainer:
             num_train_epochs=self.config["epochs"],
             learning_rate=self.config["learning_rate"],
             fp16=self.config.get("fp16", False),  # 맥 혹은 cpu용으로 돌릴려면 False 혹은 주석 필요
-            gradient_accumulation_steps=self.config.get("gradient_accumulation_steps", 1),
+            gradient_accumulation_steps=self.config.get("gradient_accumulation_steps", 8),
             warmup_ratio=self.config.get("warmup_ratio", 0.1),
             
             # datealoader 관련 설정
@@ -58,7 +58,7 @@ class QwenTrainer:
 
             # 기타 설정
             # attn_implementation="eager"
-            # remove_unused_columns=self.config.get("remove_unused_columns", True),
+            remove_unused_columns=self.config.get("remove_unused_columns", True),
             # label_names=self.config.get("label_names", ["labels"]),
             # save_on_each_node=self.config.get("save_on_each_node", True),
         )
