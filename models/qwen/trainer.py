@@ -10,6 +10,7 @@ class QwenTrainer:
 
     def train(self):
         dataset = load_dataset("json", data_files = self.config["train_data_dir"])
+        print(dataset)
 
         training_args = TrainingArguments(
             # 기본설정
