@@ -6,7 +6,7 @@ import torch
 # 장치 설정 (맥 용 MPS 혹은 Nvidia GPU 사용 가능 시 사용)
 DEVICE = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
 
-def build_trainer(config, data, training_args):
+def build_trainer(config, train_dataset, training_args):
     # --- 모델 및 토크나이저 로딩
     model = AutoModelForCausalLM.from_pretrained(
         config["model_name_or_path"],
@@ -41,10 +41,6 @@ def build_trainer(config, data, training_args):
         loss = loss_fn(logits.view(-1, logits.size(-1)), labels.view(-1))
         return {"eval_loss": loss.item()}
 
-    # 쪼갠 데이터셋 정의
-    dataset_list = Dataset.from_list(data)
-    split_data = dataset_list.train_test_split(test_size=0.0003)
-
     # --- Tokenization
     # TODO: 베이스를 기반으로 tokenizer를 설정할 수 있도록 수정필요 
     def tokenize_function(examples):
@@ -67,10 +63,11 @@ def build_trainer(config, data, training_args):
         inputs["labels"] = tokenized["input_ids"]
         return inputs
     
-
+    # train_dataset = 
+    
     # tokenized_dataset = dataset.map(tokenize_function, batched=True)
-    tokenized_train_dataset = split_data["train"].map(tokenize_function)
-    tokenized_val_dataset = split_data["test"].map(tokenize_function)
+    tokenized_train_dataset = train_dataset["train"].map(tokenize_function)
+    tokenized_val_dataset = val_dataset["test"].map(tokenize_function)
 
     trainer = Trainer(
         model=model,

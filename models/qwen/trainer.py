@@ -9,8 +9,14 @@ class QwenTrainer:
             self.config = yaml.safe_load(f)
 
     def train(self):
-        dataset = load_dataset("json", data_files = self.config["train_data_dir"])
+        # 데이터셋 로딩
+        dataset = load_dataset("json", data_files = {
+            "train": self.config["train_data_dir"]
+            }, split = "train")
         print(dataset)
+
+        # 데이터셋 분할(train/test)
+        train_dataset = dataset["train"]
 
         training_args = TrainingArguments(
             # 기본설정
@@ -58,5 +64,5 @@ class QwenTrainer:
             save_on_each_node=self.config.get("save_on_each_node", True),
         )
 
-        trainer = build_trainer(self.config, dataset, training_args)
+        trainer = build_trainer(self.config, train_dataset, training_args)
         trainer.train()
