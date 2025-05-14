@@ -6,6 +6,12 @@
 HuggingFace 기반의 학습도구(transformer, peft, datasets)로 제작되었으며, 모델은 Qwen 2.5 버전 기반으로 FineTuning 하는 코드입니다.
 추후 학습에 필요한 변수는 변경 가능하도록 UI 혹은 yaml 파일로 바꿀 예정이며, 차후 데이터 모델이 충족된다면 Hugging Face으로 올릴 예정입니다.
 
+**학습모델**
+ - MLP-KTLim/llama-3-Korean-Bllossom-8B
+ - beomi/KoAlpaca-llama-1-7b
+ - Qwen/Qwen2.5-0.5B
+ - Qwen/Qwen2.5-7B
+
 **준비사항**
  - 아나콘다(권장)
  - python 3.12+
