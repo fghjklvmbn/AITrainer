@@ -113,6 +113,7 @@ tokenizer = AutoTokenizer.from_pretrained(args.train.MODEL_NAME)
 # 데이터셋 구성
 dataset = Dataset.from_list(data)
 split_data = dataset.train_test_split(test_size=0.0003)
+print(dataset)
 
 def tokenize_function(example):
     prompt = example["instruction"] + " " + example["input"]
