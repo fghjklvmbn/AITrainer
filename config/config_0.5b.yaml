@@ -1,9 +1,9 @@
 train:
   output_dir: "./checkpoint"
   batch_size: 1
-  gradient_accumulation_steps: 4
+  gradient_accumulation_steps: 8
   fp16: False  # 맥 혹은 cpu용으로 돌릴려면 False 혹은 주석 필요
-  epochs: 5
+  epochs: 3
   lr: 0.0002
   save_steps: 100
   save_total_limit: 5
