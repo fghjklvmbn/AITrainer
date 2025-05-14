@@ -6,7 +6,7 @@ import torch
 # 장치 설정 (맥 용 MPS 혹은 Nvidia GPU 사용 가능 시 사용)
 DEVICE = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
 
-def build_trainer(config, train_dataset, training_args):
+def build_trainer(config, train_dataset, val_dataset, training_args):
     # --- 모델 및 토크나이저 로딩
     model = AutoModelForCausalLM.from_pretrained(
         config["model_name_or_path"],
@@ -66,15 +66,14 @@ def build_trainer(config, train_dataset, training_args):
     # train_dataset = 
     
     # tokenized_dataset = dataset.map(tokenize_function, batched=True)
-    tokenized_train_dataset = train_dataset["train"].map(tokenize_function)
-    tokenized_val_dataset = val_dataset["test"].map(tokenize_function)
+    tokenized_train_dataset = train_dataset["train"].map(tokenize_function, batched=False)
+    tokenized_val_dataset = val_dataset["test"].map(tokenize_function, batched=False)
 
     trainer = Trainer(
         model=model,
         args=training_args,
         train_dataset=tokenized_train_dataset,
         eval_dataset=tokenized_val_dataset,
-        tokenizer=tokenizer,
         compute_metrics=compute_metrics,
     )
     return trainer

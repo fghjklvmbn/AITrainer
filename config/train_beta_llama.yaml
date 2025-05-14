@@ -1,15 +1,15 @@
 # 모델/데이터 경로/출력 경로 설정
 model_type: "llama"
 model_name_or_path: "beomi/KoAlpaca-llama-1-7b"
-train_data_dir: "./data/json_files"
+train_data_dir: "data/json_files"
 output_dir: "./checkpoints/llama"
 
 # 학습 설정
 batch_size: 1
 epochs: 1
-learning_rate: 5e-4
+learning_rate: 0.0002
 seed: 42
-max_length: 512
+max_length: 128
 
 #LoRA 설정
 lora_r: 8

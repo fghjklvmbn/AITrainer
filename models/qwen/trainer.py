@@ -10,13 +10,12 @@ class QwenTrainer:
 
     def train(self):
         # 데이터셋 로딩
-        dataset = load_dataset("json", data_files = {
-            "train": self.config["train_data_dir"]
-            }, split = "train")
+        dataset = load_dataset("json", data_files = self.config["train_data_dir"])
         print(dataset)
+        train_dataset = dataset["train"]
 
         # 데이터셋 분할(train/test)
-        train_dataset = dataset["train"]
+        val_datset = train_dataset.train_test_split(test_size=0.03, shuffle=True, seed=42)
 
         training_args = TrainingArguments(
             # 기본설정
@@ -44,7 +43,7 @@ class QwenTrainer:
             # 저장/로깅 관련 설정
             save_steps=self.config.get("save_steps", 500),
             save_total_limit=self.config.get("save_total_limit", 2),
-            evaluation_strategy="steps",
+            eval_strategy="steps",
             eval_steps=self.config.get("eval_steps", 500),
             save_strategy="steps",
             load_best_model_at_end=True,
@@ -59,10 +58,11 @@ class QwenTrainer:
 
 
             # 기타 설정
-            remove_unused_columns=self.config.get("remove_unused_columns", False),
-            label_names=self.config.get("label_names", ["labels"]),
-            save_on_each_node=self.config.get("save_on_each_node", True),
+            # attn_implementation="eager"
+            # remove_unused_columns=self.config.get("remove_unused_columns", True),
+            # label_names=self.config.get("label_names", ["labels"]),
+            # save_on_each_node=self.config.get("save_on_each_node", True),
         )
 
-        trainer = build_trainer(self.config, train_dataset, training_args)
+        trainer = build_trainer(self.config, dataset, val_datset, training_args)
         trainer.train()
