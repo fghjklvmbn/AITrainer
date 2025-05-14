@@ -76,4 +76,6 @@ def build_trainer(config, train_dataset, val_dataset, training_args):
         eval_dataset=tokenized_val_dataset,
         compute_metrics=compute_metrics,
     )
+    model.save_pretrained("model/qwen")
+    tokenizer.save_pretrained("model/tokenizer")
     return trainer

@@ -66,3 +66,5 @@ class QwenTrainer:
 
         trainer = build_trainer(self.config, dataset, val_datset, training_args)
         trainer.train()
+        model.save_pretrained(args.train.LOCAL_MODEL_PATH)
+        tokenizer.save_pretrained(args.train.LOCAL_MODEL_PATH)
