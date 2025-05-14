@@ -1,10 +1,10 @@
 # 모델/데이터 경로/출력 경로 설정
-model_type: "qwen"
-model_name_or_path: "Qwen/Qwen2.5-0.5B"
+model_type: "llama"
+model_name_or_path: "beomi/KoAlpaca-llama-1-7b"
 train_data_dir: "data/json_files/*.json"
-output_dir: "./checkpoints/qwen"
-output_model_dir : "output_dir/qwen/model"
-output_token_dir : "output_dir/qwen/token"
+output_dir: "./checkpoints/llama"
+output_model_dir: "output_dir/llama/model"
+output_token_dir: "output_dir/llama/token"
 
 # 학습 설정
 batch_size: 1

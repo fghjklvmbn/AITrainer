@@ -1,0 +1,7 @@
+transformers==4.49.0
+peft
+datasets
+pyyaml
+SentencePiece
+hf_xet
+tensorboardX

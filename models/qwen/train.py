@@ -42,7 +42,6 @@ def build_trainer(config, train_dataset, val_dataset, training_args):
         return {"eval_loss": loss.item()}
 
     # --- Tokenization
-    # TODO: 베이스를 기반으로 tokenizer를 설정할 수 있도록 수정필요 
     def tokenize_function(examples):
         # prompt 형식 구성
         prompt = examples["instruction"] + " " + examples["input"]
@@ -76,6 +75,7 @@ def build_trainer(config, train_dataset, val_dataset, training_args):
         eval_dataset=tokenized_val_dataset,
         compute_metrics=compute_metrics,
     )
-    model.save_pretrained("model/qwen")
-    tokenizer.save_pretrained("model/tokenizer")
+    model.save_pretrained(config["output_model_dir"])
+    tokenizer.save_pretrained(config["output_token_dir"])
+    
     return trainer

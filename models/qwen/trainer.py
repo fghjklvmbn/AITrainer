@@ -11,7 +11,6 @@ class QwenTrainer:
     def train(self):
         # 데이터셋 로딩
         dataset = load_dataset("json", data_files = self.config["train_data_dir"])
-        print(dataset)
         train_dataset = dataset["train"]
 
         # 데이터셋 분할(train/test)
@@ -28,9 +27,9 @@ class QwenTrainer:
             warmup_ratio=self.config.get("warmup_ratio", 0.1),
             
             # datealoader 관련 설정
-            dataloader_num_workers=self.config.get("dataloader_num_workers", 4),
-            dataloader_pin_memory=self.config.get("dataloader_pin_memory", True),
-            dataloader_drop_last=self.config.get("dataloader_drop_last", True),
+            # dataloader_num_workers=self.config.get("dataloader_num_workers", 4),
+            # dataloader_pin_memory=self.config.get("dataloader_pin_memory", True),
+            # dataloader_drop_last=self.config.get("dataloader_drop_last", True),
 
 
             # 옵티마이저 관련 설정
@@ -66,5 +65,3 @@ class QwenTrainer:
 
         trainer = build_trainer(self.config, dataset, val_datset, training_args)
         trainer.train()
-        model.save_pretrained(args.train.LOCAL_MODEL_PATH)
-        tokenizer.save_pretrained(args.train.LOCAL_MODEL_PATH)
