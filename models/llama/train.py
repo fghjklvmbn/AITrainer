@@ -1,6 +1,7 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer
 from peft import prepare_model_for_kbit_training, LoraConfig, get_peft_model
 import torch
+from datasets import load_metric
 
 DEVICE = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
 
@@ -19,13 +20,38 @@ def build_trainer(config, train_dataset, val_dataset, training_args):
     )
 
     # --- 평가 지표 계산 함수
+    # def compute_metrics(eval_pred):
+    #     logits, labels = eval_pred
+    #     loss_fn = torch.nn.CrossEntropyLoss()
+    #     logits = torch.tensor(logits).to(DEVICE)
+    #     labels = torch.tensor(labels).to(DEVICE)
+    #     loss = loss_fn(logits.view(-1, logits.size(-1)), labels.view(-1))
+    #     return {"eval_loss": loss.item()}
+
     def compute_metrics(eval_pred):
-        logits, labels = eval_pred
-        loss_fn = torch.nn.CrossEntropyLoss()
-        logits = torch.tensor(logits).to(DEVICE)
-        labels = torch.tensor(labels).to(DEVICE)
-        loss = loss_fn(logits.view(-1, logits.size(-1)), labels.view(-1))
-        return {"eval_loss": loss.item()}
+        predictions, labels = eval_pred
+
+        # 디코딩
+        decoded_preds = tokenizer.batch_decode(predictions, skip_special_tokens=True)
+        decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+
+        # 텍스트 후처리 (공백 제거 등)
+        decoded_preds = [pred.strip() for pred in decoded_preds]
+        decoded_labels = [label.strip() for label in decoded_labels]
+
+        # BLEU/ROUGE 계산
+        bleu = load_metric("bleu")
+        rouge = load_metric("rouge")
+
+        bleu_result = bleu.compute(predictions=[pred.split() for pred in decoded_preds],
+                                   references=[[label.split()] for label in decoded_labels])
+        rouge_result = rouge.compute(predictions=decoded_preds, references=decoded_labels)
+
+        return {
+            "bleu": bleu_result["bleu"],
+            "rougeL": rouge_result["rougeL"].mid.fmeasure
+        }
+
 
 
     # --- LoRA 설정
@@ -39,6 +65,8 @@ def build_trainer(config, train_dataset, val_dataset, training_args):
         task_type="CAUSAL_LM",
     )
     model = get_peft_model(model, lora_config)
+
+    # 트레이닝 가능한 파라미터(LoRA) 출력
     model.print_trainable_parameters()
 
     # --- Tokenization
@@ -56,7 +84,7 @@ def build_trainer(config, train_dataset, val_dataset, training_args):
             examples["output"],
             truncation=True,
             padding="max_length",
-            max_length=config.get("max_length", 512)
+            max_length=config.get("max_length", 128)
         )
         tokenized = tokenizer(examples["output"], truncation=True, padding="max_length", max_length=128)
         inputs["labels"] = tokenized["input_ids"]

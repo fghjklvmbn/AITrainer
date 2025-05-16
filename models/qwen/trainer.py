@@ -14,7 +14,7 @@ class QwenTrainer:
         train_dataset = dataset["train"]
 
         # 데이터셋 분할(train/test)
-        val_datset = train_dataset.train_test_split(test_size=0.03, shuffle=True, seed=42)
+        val_datset = train_dataset.train_test_split(test_size=self.config["split_size"], shuffle=True, seed=42)
 
         training_args = TrainingArguments(
             # 기본설정
@@ -68,3 +68,4 @@ class QwenTrainer:
 
         model.save_pretrained(self.config["output_model_dir"])
         tokenizer.save_pretrained(self.config["output_token_dir"])
+        print("모델과 토크나이징 파일이 저장되었습니다.")

@@ -14,7 +14,7 @@ class LlamaTrainer:
         train_dataset = dataset["train"]
 
         # 데이터셋 분할(train/test)
-        val_datset = train_dataset.train_test_split(test_size=0.03, shuffle=True, seed=42)
+        val_datset = train_dataset.train_test_split(test_size=self.config["split_size"], shuffle=True, seed=42)
 
         training_args = TrainingArguments(
             # 기본설정
