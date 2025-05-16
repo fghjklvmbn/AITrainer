@@ -49,5 +49,8 @@ class LlamaTrainer:
             # save_on_each_node=self.config.get("save_on_each_node", True),
         )
 
-        trainer = build_trainer(self.config, dataset, val_datset, training_args)
+        model, tokenizer, trainer = build_trainer(self.config, dataset, val_datset, training_args)
         trainer.train()
+
+        model.save_pretrained(self.config["output_model_dir"])
+        tokenizer.save_pretrained(self.config["output_token_dir"])

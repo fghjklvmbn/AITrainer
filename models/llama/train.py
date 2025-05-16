@@ -74,6 +74,5 @@ def build_trainer(config, train_dataset, val_dataset, training_args):
         compute_metrics=compute_metrics,
     )
 
-    model.save_pretrained(config["output_model_dir"])
-    tokenizer.save_pretrained(config["output_token_dir"])
-    return trainer
+    
+    return trainer, tokenizer, model
