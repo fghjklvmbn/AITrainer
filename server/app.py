@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from utils import generate_story
+from test_gen import generate_fairy_tale
 
 app = Flask(__name__)
 
@@ -13,6 +14,20 @@ def generate():
     
     result = generate_story(prompt)
     return jsonify({"result": result})
+
+
+@app.route('/generate_story_test', methods=['POST'])
+def generate():
+    data = request.json
+    # LLM 또는 템플릿 기반으로 생성
+    result = generate_fairy_tale(
+        world=data["world"],
+        plot=data["plot"],
+        main_char=data["main_character"],
+        progression=data["story_progression"],
+        tags=data["tags"]
+    )
+    return jsonify(result)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=3000, debug=True)
