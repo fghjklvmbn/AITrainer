@@ -21,7 +21,17 @@ model = PeftModel.from_pretrained(model, "./storybook_model")
 device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 model.to(device)
 
-def generate_story(prompt):
+def format_prompt(data):
+    return (
+        "너는 지금부터 이야기 작가야.\n"
+        "프롬프트에 해당하는 세계관, 등장인물, 짧은 줄거리, 태그를 json형태로 출력해야되 :\n"
+        "프롬프트:" + {data} + "\n"
+        "스토리:"
+    )
+
+
+def generate_story(data):
+    prompt = format_prompt(data)
     inputs = tokenizer(prompt, return_tensors="pt").to(device)
     outputs = model.generate(
         **inputs,
@@ -32,7 +42,3 @@ def generate_story(prompt):
     )
     return tokenizer.decode(outputs[0], skip_special_tokens=True)
 
-# 테스트
-# prompt = ""
-# story = generate_story(prompt)
-# print(story)
