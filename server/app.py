@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from utils import generate_story
-from test_gen import generate_fairy_tale
+from server.utils_test import load_model_and_tokenizer, generate_story
 
 app = Flask(__name__)
 
@@ -16,18 +16,22 @@ def generate():
     return jsonify({"result": result})
 
 
+model, tokenizer = load_model_and_tokenizer()
+
 @app.route('/generate_story_test', methods=['POST'])
 def generate():
-    data = request.json
-    # LLM 또는 템플릿 기반으로 생성
-    result = generate_fairy_tale(
-        world=data["world"],
-        plot=data["plot"],
-        main_char=data["main_character"],
-        progression=data["story_progression"],
-        tags=data["tags"]
-    )
-    return jsonify(result)
+    data = request.get_json()
+
+    required_keys = ["world", "plot", "main_character", "story_progression", "tags"]
+    if not all(key in data for key in required_keys):
+        return jsonify({"error": "Missing required keys"}), 400
+
+    try:
+        result = generate_story(data, model, tokenizer)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"오류 ": str(e)}), 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=3000, debug=True)
