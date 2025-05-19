@@ -5,5 +5,3 @@ pyyaml
 SentencePiece
 hf_xet
 tensorboardX
-evaluate
-scikit-learn

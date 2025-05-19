@@ -1,5 +1,5 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer
-import evaluate
+from datasets import Dataset
 from peft import prepare_model_for_kbit_training, LoraConfig, get_peft_model
 import torch
 
@@ -43,33 +43,26 @@ def build_trainer(config, train_dataset, val_dataset, training_args):
 
     def compute_metrics(eval_pred):
         predictions, labels = eval_pred
+
         # 디코딩
         decoded_preds = tokenizer.batch_decode(predictions, skip_special_tokens=True)
         decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+
         # 텍스트 후처리 (공백 제거 등)
         decoded_preds = [pred.strip() for pred in decoded_preds]
         decoded_labels = [label.strip() for label in decoded_labels]
-    
-        # BLEU 계산
-        bleu = evaluate.load("bleu")
-        # BLEU는 references를 [list of list of tokens] 형식으로 요구
-        # 예: references = [[ref1_tokens], [ref2_tokens], ...]
-        references = [label.split() for label in decoded_labels]  # ✅ 수정: [[label.split()]] → [label.split()]
-        predictions_tokenized = [pred.split() for pred in decoded_preds]
-    
-        # ROUGE 계산
-        rouge = evaluate.load("rouge")
-    
-        # BLEU 계산
-        bleu_result = bleu.compute(predictions=predictions_tokenized, references=references)
-        # ROUGE 계산
+
+        # BLEU/ROUGE 계산
+        bleu = load_metric("bleu")
+        rouge = load_metric("rouge")
+
+        bleu_result = bleu.compute(predictions=[pred.split() for pred in decoded_preds],
+                                   references=[[label.split()] for label in decoded_labels])
         rouge_result = rouge.compute(predictions=decoded_preds, references=decoded_labels)
-    
-        # BLEU의 "bleu" 키가 존재하는지 확인 (예: "bleu1", "bleu2", "bleu3", "bleu4" 등)
-        # ROUGE의 "rougeL" 키가 존재하는지 확인
+
         return {
-            "bleu": bleu_result.get("bleu", 0.0),  # 기본값 설정
-            "rougeL": rouge_result.get("rougeL", {}).get("mid", {}).get("fmeasure", 0.0)
+            "bleu": bleu_result["bleu"],
+            "rougeL": rouge_result["rougeL"].mid.fmeasure
         }
 
     # --- Tokenization

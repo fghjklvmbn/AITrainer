@@ -1,10 +1,9 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer
 from peft import prepare_model_for_kbit_training, LoraConfig, get_peft_model
 import torch
-import evaluate
+from datasets import load_metric
 
 DEVICE = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
-accuracy = evaluate.load("accuracy")
 
 def build_trainer(config, train_dataset, val_dataset, training_args):
     # --- 모델 및 토크나이저 로딩
@@ -40,15 +39,9 @@ def build_trainer(config, train_dataset, val_dataset, training_args):
         decoded_preds = [pred.strip() for pred in decoded_preds]
         decoded_labels = [label.strip() for label in decoded_labels]
 
-        for pred, label in zip(predictions, labels):
-            decoded_preds.append(tokenizer.decode(pred, skip_special_tokens=True))
-            decoded_labels.append(tokenizer.decode(label, skip_special_tokens=True))
-            if len(decoded_preds) >= 1000:  # 메모리 제한 설정
-                break
-            return rouge.compute(predictions=decoded_preds, references=decoded_labels)
         # BLEU/ROUGE 계산
-        bleu = evaluate.load("bleu")
-        rouge = evaluate.load("rouge")
+        bleu = load_metric("bleu")
+        rouge = load_metric("rouge")
 
         bleu_result = bleu.compute(predictions=[pred.split() for pred in decoded_preds],
                                    references=[[label.split()] for label in decoded_labels])

@@ -3,5 +3,3 @@ peft
 datasets
 pyyaml
 tensorboardX
-evaluate
-scikit-learn
