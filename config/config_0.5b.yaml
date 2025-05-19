@@ -1,0 +1,19 @@
+train:
+  output_dir: "./checkpoint"
+  batch_size: 1
+  gradient_accumulation_steps: 8
+  fp16: False  # 맥 혹은 cpu용으로 돌릴려면 False 혹은 주석 필요
+  epochs: 3
+  lr: 0.0002
+  save_steps: 100
+  save_total_limit: 5
+  logging_steps: 5
+  warmup_ratio: 0.01
+  eval_steps: 50
+  MODEL_NAME : "Qwen/Qwen2.5-0.5B"
+  LOCAL_MODEL_PATH : "./server_model/storybook_model"
+
+data:
+  write_style_path: "./data/json_files/write_style.json"
+  story_path: "./data/json_files/story.json"
+  character_path: "./data/json_files/character.json"
