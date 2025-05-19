@@ -23,14 +23,14 @@ model.to(device)
 
 def format_prompt(data):
     return (
-        "너는 지금부터 이야기 작가야.\n"
-        "프롬프트에 해당하는 세계관, 등장인물, 짧은 줄거리, 태그를 json형태로 출력해야되 :\n"
+        "너는 프롬프트에 맞춰서 생성된 동화 등장인물의 상세정보를 JSON 형태로 출력해야해\n"
+        "프롬프트에 해당하는 등장인물의 상세한 정보를 이름(name), 성별(gender), 취미(personality), 능력(ability), 생김새(appearance)를 출력해야돼 :\n"
         "프롬프트:" + {data} + "\n"
         "스토리:"
     )
 
 
-def generate_story(data):
+def character_spec(data):
     prompt = format_prompt(data)
     inputs = tokenizer(prompt, return_tensors="pt").to(device)
     outputs = model.generate(

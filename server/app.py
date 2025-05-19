@@ -1,63 +1,68 @@
 from flask import Flask, request, jsonify
 from chatbot import Chatbot
-# from utils import generate_story
+from CreateStory import generate_story
+from WriteStory import write_story
+from ModifyStory import modify_story
+from CharaterSpec import character_spec
 
 app = Flask(__name__)
 chatbot = Chatbot()  # 챗봇 인스턴스 생성
 
 # api url 설정
-# @app.route("/ai/StoryCreate/fc", methods=["POST"])
-# @app.route("/ai/StoryCreate/write", methods=["POST"])
-# @app.route("/ai/StoryCreate/modify", methods=["POST"])
-# @app.route("/ai/StoryCreate/character_sp", methods=["POST"])
+@app.route("/ai/StoryCreate/generate", methods=["POST"])
+@app.route("/ai/StoryCreate/write", methods=["POST"])
+@app.route("/ai/StoryCreate/modify", methods=["POST"])
+@app.route("/ai/StoryCreate/character_sp", methods=["POST"])
 
-# 기타 api url 설정 : 대화(chat) 기능
+# (베타)기타 api url 설정 : 대화(chat) 기능
 @app.route("/ai/chat", methods=["POST"])
 @app.route("/ai/reset", methods=["POST"])
 
-# def fc_story():
-#     data = request.get_json()
-#     prompt = data.get("prompt", "")
+# 전체적인 이야기 생성
+def generate_story():
+    data = request.get_json()
+    prompt = data.get("prompt", "")
     
-#     if not prompt:
-#         return jsonify({"오류": "프롬프트(prompt) 항목은 필수 입니다."}), 400
+    if not prompt:
+        return jsonify({"오류": "프롬프트(prompt) 항목은 필수 입니다."}), 400
     
-#     result = generate_story(prompt)
-#     return jsonify({"result": result})
+    result = generate_story(prompt)
+    return jsonify({"result": result})
 
-
-# def write_story():
-#     data = request.get_json()
-#     prompt = data.get("prompt", "")
+# 부차적인 이야기 생성(ex, 추가 내용 만들기)
+def write_story():
+    data = request.get_json()
+    prompt = data.get("prompt", "")
     
-#     if not prompt:
-#         return jsonify({"오류": "프롬프트(prompt) 항목은 필수 입니다."}), 400
+    if not prompt:
+        return jsonify({"오류": "프롬프트(prompt) 항목은 필수 입니다."}), 400
     
-#     result = generate_story(prompt)
-#     return jsonify({"result": result})
+    result = write_story(prompt)
+    return jsonify({"result": result})
 
-
-# def modify_story():
-#     data = request.get_json()
-#     prompt = data.get("prompt", "")
+# 이야기 수정
+def modify_story():
+    data = request.get_json()
+    prompt = data.get("prompt", "")
     
-#     if not prompt:
-#         return jsonify({"오류": "프롬프트(prompt) 항목은 필수 입니다."}), 400
+    if not prompt:
+        return jsonify({"오류": "프롬프트(prompt) 항목은 필수 입니다."}), 400
     
-#     result = generate_story(prompt)
-#     return jsonify({"result": result})
+    result = modify_story(prompt)
+    return jsonify({"result": result})
 
-# def character_sp():
-#     data = request.get_json()
-#     prompt = data.get("prompt", "")
+# 등장인물 자세한 정보 생성
+def character_spec():
+    data = request.get_json()
+    prompt = data.get("prompt", "")
     
-#     if not prompt:
-#         return jsonify({"오류": "프롬프트(prompt) 항목은 필수 입니다."}), 400
+    if not prompt:
+        return jsonify({"오류": "프롬프트(prompt) 항목은 필수 입니다."}), 400
     
-#     result = generate_story(prompt)
-#     return jsonify({"result": result})
+    result = character_spec(prompt)
+    return jsonify({"result": result})
 
-
+# (베타) 챗봇 대화 기능
 def chat():
     data = request.json
     user_input = data.get("input", "")
