@@ -32,7 +32,7 @@ def build_trainer(config, train_dataset, val_dataset, training_args):
     model = get_peft_model(model, lora_config)
     model.print_trainable_parameters()
 
-    # 평가 지표 계산 함수
+    # 구 평가 지표 계산 함수
     # def compute_metrics(eval_pred):
     #     logits, labels = eval_pred
     #     loss_fn = torch.nn.CrossEntropyLoss()
@@ -41,6 +41,7 @@ def build_trainer(config, train_dataset, val_dataset, training_args):
     #     loss = loss_fn(logits.view(-1, logits.size(-1)), labels.view(-1))
     #     return {"eval_loss": loss.item()}
 
+    # 신 평가 지표 계산 함수
     def compute_metrics(eval_pred):
         predictions, labels = eval_pred
 

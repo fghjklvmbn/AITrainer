@@ -1,0 +1,67 @@
+[
+    {
+        "instruction": "동화 스토리 생성",
+        "input": "world: 어른들은 이해하지 못하는 상상의 세계와 현실 사이\nplot: 어린 시절 꿈을 버린 화가가 되었던 아이의 성장 이야기\nmain_character: 나 (화자가 되는 어린 시절의 아이)\nstory_progression: 어른들의 세계에서 상상력을 잃고 방황하다, 다시 순수함의 가치를 되새긴다\ntags: [상상력, 성장, 어른과 아이, 순수함]",
+        "output": "world: 어른들이 이해하지 못하는 상상의 세계 — 보아 뱀이 코끼리를 삼키는 그림도, 별 이야기도 통하지 않는 현실 속 세계.\ncharacters:\n- name: 나\n  gender: 남자\n  personality: 상상력이 풍부하고 내면이 섬세한 아이\n  ability: 상상 속 장면을 그림으로 표현하는 능력\n  appearance: 평범한 아이처럼 보이지만, 마음속엔 무한한 우주를 담고 있음\n- name: 어른들\n  gender: 남녀 혼합\n  personality: 현실적이고 논리 중심적이며 상상력 부족\n  ability: 없다 (혹은 상상력을 이해하지 못함)\n  appearance: 양복과 넥타이, 신문을 든 모습 등으로 표현됨\nplot: 나는 여섯 살 때 보아 뱀이 코끼리를 삼킨 그림을 그리고 어른들에게 보여주지만, 아무도 이해하지 못한다. 결국 화가의 꿈을 접고 현실적인 삶을 살며 비행기 조종사가 된다. 하지만 마음속에는 여전히 어린 시절의 순수한 시선과 상상력이 살아 있다.\nstory_progression: 세상을 돌아다니며 다양한 어른들을 만나지만, 이해받지 못하는 상상력에 점점 말문을 닫는다. 그러나 한 사람이라도 이해해 줄 수 있기를 바라는 마음으로, 마음속 이야기를 간직한 채 살아간다.\ntags: [상상력, 성장, 어른과 아이, 순수함]"
+    },
+    {
+        "instruction": "동화 스토리 생성",
+        "input": "world: 바람이 말을 걸어오는 고요한 숲\nplot: 외로움을 느끼는 아이가 숲의 존재들과 친구가 되는 이야기\nmain_character: 소녀 예림이\nstory_progression: 혼자 노는 아이가 바람, 나무, 동물들과 교감하며 진정한 친구의 의미를 깨닫는다\ntags: [자연, 교감, 외로움, 친구]",
+        "output": "world: 바람이 나뭇잎을 흔들며 속삭이는 숲, 사람들은 듣지 못하지만 아이는 귀 기울이면 들을 수 있는 숲.\ncharacters:\n- name: 예림이\n  gender: 여자\n  personality: 조용하고 섬세한 감성을 가진 아이\n  ability: 자연의 소리를 들을 수 있음\n  appearance: 흰 드레스를 입고 꽃핀 머리핀을 한 소녀\n- name: 바람, 나무, 다람쥐, 고슴도치\n  gender: 무성 또는 동물\n  personality: 친절하고 이야기 많은 자연의 존재들\n  ability: 아이와 대화 가능\n  appearance: 자연 그 자체로 존재함\nplot: 예림이는 친구가 없어 외롭게 혼자 숲을 걷는다. 그런데 바람이 말을 걸고, 나무가 속삭이고, 동물들이 다가온다.\nstory_progression: 처음엔 놀라지만 곧 자연의 친구들과 놀며 웃음을 되찾고, 외로움이 사라진다. 친구는 꼭 사람이 아니어도 된다는 걸 깨닫는다.\ntags: [자연, 교감, 외로움, 친구]"
+    },
+    {
+        "instruction": "동화 스토리 생성",
+        "input": "world: 해와 달이 매일 다투는 하늘나라\nplot: 낮과 밤이 공존하는 마을을 지키는 한 아이의 이야기\nmain_character: 민우\nstory_progression: 해와 달의 다툼으로 혼란에 빠진 마을을 민우가 중재하며 균형을 되찾는다\ntags: [조화, 낮과 밤, 중재, 성장]",
+        "output": "world: 해와 달이 함께 머무를 수 없는 하늘나라, 그 아래 조용히 낮과 밤이 함께 오는 신비로운 마을\ncharacters:\n- name: 민우\n  gender: 남자\n  personality: 용기 있고 지혜로운 아이\n  ability: 해와 달의 목소리를 들을 수 있음\n  appearance: 평범하지만 눈동자에 태양과 달이 함께 비치는 아이\n- name: 해, 달\n  gender: 남자/여자\n  personality: 고집 세고 서로를 질투함\n  ability: 각각 빛과 어둠을 주관함\n  appearance: 황금색 눈동자와 은빛 머릿결로 묘사됨\nplot: 마을이 아침과 밤을 동시에 겪는 혼란 속에서, 민우는 해와 달의 갈등을 이해하고 중재하기로 결심한다.\nstory_progression: 민우는 각각의 마음을 듣고, 둘이 지닌 고유함의 아름다움을 이야기하며, 결국 해와 달은 교대로 세상을 비추기로 약속한다.\ntags: [조화, 낮과 밤, 중재, 성장]"
+    },
+    {
+        "instruction": "동화 스토리 생성",
+        "input": "world: 이름이 사라진 세계\nplot: 모든 존재의 이름이 잊혀지는 마법에 걸린 마을의 이야기\nmain_character: 기억을 지키는 소년 지안\nstory_progression: 지안이 하나씩 이름을 기억해 나가며 마을의 정체성을 되찾는다\ntags: [기억, 정체성, 마법, 말]",
+        "output": "world: 어느 날 아침, 모든 것의 이름이 사라지고 서로를 부르지 못하게 된 이름 없는 마을\ncharacters:\n- name: 지안\n  gender: 남자\n  personality: 기억력이 좋고 책임감 있는 소년\n  ability: 사라진 이름을 하나씩 떠올릴 수 있음\n  appearance: 낡은 노트를 항상 들고 다니는 아이\n- name: 할머니, 강아지, 나무 등 (이름을 잃은 존재들)\n  gender: 혼합\n  personality: 당황하고 혼란스러움\n  ability: 스스로의 정체성을 잃음\n  appearance: 점점 흐릿해져가는 모습으로 묘사됨\nplot: 마법처럼 사라진 이름들, 마을은 말이 끊기고 혼란에 빠진다. 지안만이 이름들을 기억하며 모두의 존재를 다시 불러낸다.\nstory_progression: 지안은 하나하나 존재의 이름을 기억해 노트에 적으며, 마을은 다시 색을 되찾고 사람들은 서로를 부를 수 있게 된다.\ntags: [기억, 정체성, 마법, 말]"
+    },
+    {
+        "instruction": "동화 스토리 생성",
+        "input": "world: 달빛이 말을 거는 호숫가\nplot: 자기 자신을 이해하지 못했던 소년이 달과 대화를 나누며 자아를 찾는 이야기\nmain_character: 진우\nstory_progression: 내면의 외로움과 싸우던 진우가 달빛의 말을 듣고 자신을 사랑하게 된다\ntags: [자아, 성장, 자연과의 교감, 감정]",
+        "output": "world: 밤이면 달빛이 물결 위에서 춤을 추는 조용한 호숫가. 아무도 들을 수 없는 말을 들을 수 있는 아이만이 비밀을 안다.\ncharacters:\n- name: 진우\n  gender: 남자\n  personality: 내성적이고 사색적인 소년\n  ability: 달빛의 언어를 이해할 수 있음\n  appearance: 밤마다 호숫가를 걷는 소년, 눈동자에 별빛이 반짝임\n- name: 달\n  gender: 무성\n  personality: 지혜롭고 따뜻함\n  ability: 사람의 마음을 비추고 위로하는 능력\n  appearance: 은빛으로 빛나는 둥근 형상\nplot: 진우는 스스로가 누구인지, 왜 외로운지 알지 못해 방황한다. 어느 날 호숫가에서 달빛이 말을 건다.\nstory_progression: 달과의 대화를 통해 진우는 자신의 감정을 이해하고, 스스로를 있는 그대로 받아들이며 성장한다.\ntags: [자아, 성장, 자연과의 교감, 감정]"
+    },
+    {
+        "instruction": "동화 스토리 생성",
+        "input": "world: 시간이 멈춘 정원\nplot: 과거에 머물러 있는 정원 속 노인이 소녀를 만나 삶의 의미를 되찾는 이야기\nmain_character: 수아\nstory_progression: 소녀 수아가 시간을 멈춘 정원의 비밀을 풀며 노인과 함께 시간을 다시 흐르게 만든다\ntags: [시간, 치유, 세대 교감, 정원]",
+        "output": "world: 모든 시계가 멈춘 채 계절도 흐르지 않는 신비로운 정원. 단 하나의 나무만이 숨을 쉰다.\ncharacters:\n- name: 수아\n  gender: 여자\n  personality: 호기심 많고 따뜻한 마음을 가진 아이\n  ability: 닫힌 마음을 열 수 있는 순수한 눈빛\n  appearance: 꽃무늬 원피스를 입고 항상 노트를 들고 다님\n- name: 정원의 노인\n  gender: 남자\n  personality: 과거의 기억에 갇힌 사람\n  ability: 정원을 멈추게 한 주인공이자, 시간을 다시 움직일 수 있는 열쇠를 가짐\n  appearance: 흰 수염과 무거운 눈빛을 지닌 노인\nplot: 수아는 오래된 성 안 정원에서 시간이 멈춘 것을 발견하고, 그 속의 노인을 만난다.\nstory_progression: 수아의 진심 어린 말과 웃음이 노인의 마음을 녹이고, 결국 정원에 시간과 계절이 돌아오기 시작한다.\ntags: [시간, 치유, 세대 교감, 정원]"
+    },
+    {
+        "instruction": "동화 스토리 생성",
+        "input": "world: 색깔이 사라진 마을\nplot: 감정을 잃은 마을 사람들에게 한 아이가 색을 되찾아주는 이야기\nmain_character: 유리\nstory_progression: 유리가 각자의 감정을 되살리는 이야기를 그려주며 색을 되찾는다\ntags: [감정, 예술, 회복, 색채]",
+        "output": "world: 모든 것이 회색으로 변한 마을, 기쁨도 슬픔도 없는 무채색의 세상\ncharacters:\n- name: 유리\n  gender: 여자\n  personality: 상상력이 풍부하고 따뜻한 아이\n  ability: 그림으로 사람의 감정을 깨울 수 있음\n  appearance: 색연필을 항상 들고 다니는 소녀\n- name: 마을 사람들\n  gender: 남녀 혼합\n  personality: 감정이 사라져 무표정하고 기계적\n  ability: 없음\n  appearance: 회색 옷, 희미한 눈동자\nplot: 유리는 회색 마을에 도착해 처음 본 사람도 동물도 모두 감정이 없다는 사실을 알게 된다.\nstory_progression: 유리는 사람들의 이야기를 듣고 감정을 그림으로 그려주며, 하나둘 색을 되찾는다.\ntags: [감정, 예술, 회복, 색채]"
+    },
+    {
+        "instruction": "동화 스토리 생성",
+        "input": "world: 말이 씨가 되는 나라\nplot: 부정적인 말만 하던 아이가 세상의 혼란을 경험하고 긍정의 힘을 배우는 이야기\nmain_character: 준호\nstory_progression: 자신이 만든 부정의 세계를 마주한 후 말의 책임을 배우고 다시 긍정의 씨앗을 심는다\ntags: [언어, 책임, 변화, 긍정]",
+        "output": "world: 말 한마디가 현실이 되는 세계, '씨말나라'. 좋은 말은 꽃을 피우고, 나쁜 말은 가시덤불을 자란다.\ncharacters:\n- name: 준호\n  gender: 남자\n  personality: 짓궂고 말이 많은 소년\n  ability: 말한 대로 세상이 변함\n  appearance: 큰 입과 반짝이는 눈, 말풍선 모양 가방을 메고 다님\nplot: 장난처럼 던진 말들이 마을을 어지럽히고, 사람들에게 상처를 주게 된다.\nstory_progression: 준호는 가시로 뒤덮인 마을을 보고 충격을 받아, 다시 좋은 말을 퍼뜨리며 꽃을 피운다.\ntags: [언어, 책임, 변화, 긍정]"
+    },
+    {
+        "instruction": "동화 스토리 생성",
+        "input": "world: 책 속 세상이 현실이 되는 도서관\nplot: 책을 싫어하던 아이가 도서관에서 책 속 세계에 빠져들며 상상력을 되찾는 이야기\nmain_character: 하린\nstory_progression: 책 속 모험을 통해 하린은 책의 가치와 즐거움을 깨닫는다\ntags: [책, 상상력, 모험, 변화]",
+        "output": "world: 책장을 펼치면 그 안의 세계로 빨려 들어가는 신비한 도서관\ncharacters:\n- name: 하린\n  gender: 여자\n  personality: 스마트폰만 보던 현대 아이, 처음엔 책에 무관심\n  ability: 책 속 세계로 들어갈 수 있음\n  appearance: 캐주얼한 옷, 커다란 가방 속에 만화책만 가득함\n- name: 사서 고양이\n  gender: 무성\n  personality: 지혜롭고 유쾌함\n  ability: 책의 문을 열어주는 능력\n  appearance: 안경을 쓴 회색 고양이\nplot: 하린은 우연히 도서관에서 고양이를 따라 책 속 세계로 들어가게 된다.\nstory_progression: 모험을 통해 웃고 울고 공감하며, 다시 현실로 돌아왔을 때 책장을 다시 열어보게 된다.\ntags: [책, 상상력, 모험, 변화]"
+    },
+    {
+        "instruction": "동화 스토리 생성",
+        "input": "world: 거울을 통해 마음이 보이는 세계\nplot: 겉모습만 보던 사람들이 거울을 통해 진심을 마주하게 되는 이야기\nmain_character: 태윤\nstory_progression: 진심이 왜곡되어 갈등을 겪지만, 용기를 내어 자신의 마음을 인정하며 치유를 시작한다\ntags: [진심, 감정, 용기, 자기이해]",
+        "output": "world: 거울 앞에 서면 겉모습이 아니라 마음의 색이 비춰지는 세계\ncharacters:\n- name: 태윤\n  gender: 남자\n  personality: 겉으로는 쿨하지만 내면은 불안한 아이\n  ability: 자신의 진심을 숨기려 하지만 거울은 속일 수 없음\n  appearance: 교복 차림, 손에 스마트폰을 들고 다님\nplot: 태윤은 친구 앞에서는 아무렇지 않은 척하지만 거울을 보면 눈물이 맺혀 있다.\nstory_progression: 거울 속 자신을 인정하게 되며, 주변 친구들과 진심을 나누기 시작한다.\ntags: [진심, 감정, 용기, 자기이해]"
+    },
+    {
+        "instruction": "동화 스토리 생성",
+        "input": "world: 꿈을 기억하는 마을\nplot: 모두가 아침이 되면 꿈을 잊지만, 한 아이만 꿈을 기록하며 마을의 미래를 지킨다\nmain_character: 민재\nstory_progression: 꿈에서 본 예언을 현실에서 실현하며 마을을 위험에서 구함\ntags: [꿈, 예언, 기억, 책임]",
+        "output": "world: 아침이면 모두가 꿈을 잊는 마을, 꿈은 단지 잠깐의 허상일 뿐이라 여겨짐\ncharacters:\n- name: 민재\n  gender: 남자\n  personality: 집요하고 기록을 좋아함\n  ability: 꿈을 기억하고 기록할 수 있음\n  appearance: 두꺼운 꿈노트를 항상 들고 다님\nplot: 민재는 반복되는 꿈 속에서 마을에 닥칠 위험을 보게 된다.\nstory_progression: 아무도 믿지 않지만, 민재는 자신의 꿈을 따라 행동하고, 결국 마을을 위험에서 구해낸다.\ntags: [꿈, 예언, 기억, 책임]"
+    },
+    {
+        "instruction": "동화 스토리 생성",
+        "input": "world: 별똥별이 소원을 실어주는 나라\nplot: 늘 다른 사람의 소원만 빌어주던 아이가 처음으로 자신의 소원을 말하는 이야기\nmain_character: 나래\nstory_progression: 희생만 해오던 나래가 진짜 자신의 마음을 찾아 소원을 빌고 웃게 된다\ntags: [소원, 자아, 희생, 진심]",
+        "output": "world: 하늘에서 별똥별이 떨어지면 마음 속 진심 하나가 별에 실려 가는 나라\ncharacters:\n- name: 나래\n  gender: 여자\n  personality: 배려심 깊고 자기 표현이 서툰 아이\n  ability: 별똥별을 타고 다른 사람의 소원을 들어줌\n  appearance: 별 조각이 박힌 머리핀을 한 아이\nplot: 나래는 항상 다른 사람의 소원을 먼저 빌어주느라, 정작 자신은 잊고 살아간다.\nstory_progression: 별똥별이 점점 사라지자, 나래는 처음으로 자신의 소원을 진심으로 말하고 마음에 별이 다시 떠오른다.\ntags: [소원, 자아, 희생, 진심]"
+    },
+    {
+        "instruction": "동화 스토리 생성",
+        "input": "world: 계절이 없는 나라\nplot: 봄, 여름, 가을, 겨울이 다투어 혼란스러워진 세계를 순환시키는 아이의 이야기\nmain_character: 서율\nstory_progression: 자연의 순리를 깨우고 사계절의 조화를 되찾음\ntags: [자연, 질서, 순환, 조화]",
+        "output": "world: 계절이 엉켜 봄눈이 내리고 여름 눈보라가 부는 혼란스러운 나라\ncharacters:\n- name: 서율\n  gender: 남자\n  personality: 이치를 중시하고 관찰력이 뛰어난 아이\n  ability: 계절의 마음을 듣고 조화를 이룰 수 있음\n  appearance: 사계절이 그려진 외투를 입은 아이\nplot: 계절들이 서로 먼저 오겠다며 다툼을 벌이다 세상이 뒤죽박죽이 된다.\nstory_progression: 서율은 계절 하나하나의 이야기를 듣고 순서를 지키는 아름다움을 알려준다.\ntags: [자연, 질서, 순환, 조화]"
+    }
+]
