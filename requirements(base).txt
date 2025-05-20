@@ -6,3 +6,5 @@ protobuf
 tokenizer
 tensorboardX
 hf_xet
+evaluate
+scikit-learn

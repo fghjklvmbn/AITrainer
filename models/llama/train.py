@@ -1,7 +1,8 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer
 from peft import prepare_model_for_kbit_training, LoraConfig, get_peft_model
 import torch
-from datasets import load_metric
+import evaluate
+
 
 DEVICE = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
 
@@ -40,8 +41,8 @@ def build_trainer(config, train_dataset, val_dataset, training_args):
         decoded_labels = [label.strip() for label in decoded_labels]
 
         # BLEU/ROUGE 계산
-        bleu = load_metric("bleu")
-        rouge = load_metric("rouge")
+        bleu = evaluate.load("bleu")
+        rouge = evaluate.load("rouge")
 
         bleu_result = bleu.compute(predictions=[pred.split() for pred in decoded_preds],
                                    references=[[label.split()] for label in decoded_labels])
