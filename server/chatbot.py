@@ -2,7 +2,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 
 class Chatbot:
-    def __init__(self, model_name="Qwen/Qwen3-8B"):
+    def __init__(self, model_name="Qwen/Qwen2.5-7B"):
         self.model_name = model_name
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForCausalLM.from_pretrained(model_name).to("cuda" if torch.cuda.is_available() else "cpu")
