@@ -1,9 +1,9 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
-# from peft import PeftModel
+from peft import PeftModel
 
 # 기본 모델(Base Model) 경로
-base_model_path = "Qwen/Qwen2.5-14B"  # 기본 모델 경로 (예: Llama 7B)
+base_model_path = "Qwen/Qwen2.5-0.5B"  # 기본 모델 경로 (예: Llama 7B)
 
 # 토크나이저 로드
 tokenizer = AutoTokenizer.from_pretrained(base_model_path)
@@ -12,29 +12,18 @@ tokenizer = AutoTokenizer.from_pretrained(base_model_path)
 model = AutoModelForCausalLM.from_pretrained(
     base_model_path,
     torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-    device_map="cpu"
+    device_map="auto"
 )
 
 # Adapter Model 로드
-# model = PeftModel.from_pretrained(model, "./storybook_model")
+model = PeftModel.from_pretrained(model, "./storybook_model")
 
-# # device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
-device="cpu"
-# model.to(device) 
+device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
+model.to(device)
 
-def generate_story(prompt):
-    inputs = tokenizer(prompt, return_tensors="pt").to(device)
-    outputs = model.generate(
-        **inputs,
-        max_new_tokens=2048,
-        do_sample=True,
-        temperature=0.6,
-        top_p=0.9
-    )
-    return tokenizer.decode(outputs[0], skip_special_tokens=True)
-
-# 테스트
-prompt = """
+def format_prompt(data):
+    return (
+        """
 사용자 작성 내용 : "사계절이 동시에 존재하는 마법의 숲, 에르델에는 봄, 여름, 가을, 겨울의 정령이 살고 있어, 여기서 무슨일이 일어나는데, 그것에 대한 과정의 동화" 를 
 
 구조 : 
@@ -72,7 +61,19 @@ prompt = """
 - 어떠한 다른말도 금지
 
 위 구조와 규칙을 기준으로 사용자 작성 내용을 반영하여 json형식으로 출력해줘
-""" 
+"""
+    )
 
-story = generate_story(prompt)
-print(story[len(prompt):])
+
+def generate_story(data):
+    prompt = format_prompt(data)
+    inputs = tokenizer(prompt, return_tensors="pt").to(device)
+    outputs = model.generate(
+        **inputs,
+        max_new_tokens=2048,
+        do_sample=True,
+        temperature=0.6,
+        top_p=0.9
+    )
+    return tokenizer.decode(outputs[0], skip_special_tokens=True)
+

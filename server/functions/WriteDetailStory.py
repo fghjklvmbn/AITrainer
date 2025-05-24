@@ -21,16 +21,17 @@ model = PeftModel.from_pretrained(model, "./storybook_model")
 device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 model.to(device)
 
+# 짧은 줄거리를 바탕으로 이야기를 생성해내는 프롬프트
 def format_prompt(data):
     return (
         "너는 지금부터 이야기 작가야.\n"
-        "프롬프트를 기반으로 세계관(world), 등장인물(characters), 짧은 줄거리(plot), 이야기 진행(story_progression), 태그(tags)를 json형태로 출력해야해, 단, 캐릭터와 태그는 여려개여도 괜찮아. :\n"
+        "프롬프트를 기반으로 5줄 미만의 문단을 json형태로 출력해야되 :\n"
         "프롬프트:" + {data} + "\n"
         "스토리:"
     )
 
 
-def generate_story(data):
+def write_detail_story(data):
     prompt = format_prompt(data)
     inputs = tokenizer(prompt, return_tensors="pt").to(device)
     outputs = model.generate(
