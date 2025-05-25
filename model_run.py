@@ -3,7 +3,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 # from peft import PeftModel
 
 # 기본 모델(Base Model) 경로
-base_model_path = "Qwen/Qwen2.5-14B"  # 기본 모델 경로 (예: Llama 7B)
+base_model_path = "Qwen/Qwen2.5-32B"  # 기본 모델 경로 (예: Llama 7B)
 
 # 토크나이저 로드
 tokenizer = AutoTokenizer.from_pretrained(base_model_path)
@@ -35,43 +35,56 @@ def generate_story(prompt):
 
 # 테스트
 prompt = """
-사용자 작성 내용 : "사계절이 동시에 존재하는 마법의 숲, 에르델에는 봄, 여름, 가을, 겨울의 정령이 살고 있어, 여기서 무슨일이 일어나는데, 그것에 대한 과정의 동화" 를 
-
-구조 : 
+입력 : 
 {
-	"world": "세계관"
-    "genre": "장르",
-	"characters" : [
-		{ 
-  		"character_name": "등장인물의 이름"
-		"gender": "등장인물 성별"
-		"personality": "등장인물 성격"
-		"ability": "등장인물의 능력"
-		"main_character": "등장인물의 주인공 여부"
-  		}, ...
-	]
-	"plot": "대략적인 줄거리"
-	"story_progression": "대략적인 스토리 전개방향"
-	"tags": [태그1, 태그2, 태그3, ...]
+    "characters": [
+        {
+            "character_name": "봄 정령",
+            "gender": "여성",
+            "personality": "활기차고 사랑스럽다",
+            "ability": "꽃을 피우고 새싹을 자라게 한다",
+            "main_character": True
+        },
+        {
+            "character_name": "여름 정령",
+            "gender": "남성",
+            "personality": "활발하고 에너지 넘치는",
+            "ability": "태양의 힘을 빌려 열매를 열게 한다",
+            "main_character": True
+        },
+        {
+            "character_name": "가을 정령",
+            "gender": "여성",
+            "personality": "차분하고 따뜻한",
+            "ability": "잎을 떨어뜨리고 수확을 돕는다",
+            "main_character": True
+        },
+        {
+            "character_name": "겨울 정령",
+            "gender": "남성",
+            "personality": "차갑고 진지한",
+            "ability": "눈을 내리고 동물을 보호한다",
+            "main_character": True
+        }
+    ],
+}
+
+출력구조 :  
+{
+  "image_prompts": [
+    {
+      "character_name": 캐릭터 이름,
+      "prompt": 캐릭터에 맞게 묘사하는 문단 혹은 문장
+    },
+  ]
 }
 
 규칙 : 
-- 사용자 작성 내용의 요약을 바탕으로 세계관을 생성
-- 장르는 "판타지", "우화", "교훈", "모험", "생태", "감성", "교육" 중에 관련있는 것을 하나만 선택
-- 등장인물들은 어린이들이 이해할 수 있는 성격, 능력, 이름, 등장 배경 등을 포함
-- 등장인물은 사람이름 단위으로 구분
-- 주인공 여부는 중복 가능, 단, 등장인물이 출연하는 빈도가 80% 이상이여야 함
-- plot(줄거리)는 3~5줄로 작성
-- story_progression(이야기 전개 과정)는 3~5줄로 작성
-- tags(상징하는 태그, 3개)는 3개로 작성
-- 동화의 특징은 전개가 자연스럽고, 이야기가 흥미롭고, 캐릭터가 유머러스하고, 이야기가 흥미로운, 상징적인 요소가 포함되어야 한다
-- 캐릭터의 능력은 상황에 따라 다르게 활용되어야 한다
-- 등장인물의 능력은 상황에 따라 다르게 활용되어야 한다
+- 캐릭터는 저연령층 타겟으로 있도록 해야함
+- prompt는
 - python 코드 등 코드형식이 아니라 반드시 JSON형식으로 출력해야 함
-- 반복문 금지
-- 어떠한 다른말도 금지
 
-위 구조와 규칙을 기준으로 사용자 작성 내용을 반영하여 json형식으로 출력해줘
+위 입력 그리고 규칙을 참고해서 출력으로 구체적인 묘사를 하는 출력구조로 만들어줘
 """ 
 
 story = generate_story(prompt)
