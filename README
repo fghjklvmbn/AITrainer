@@ -2,6 +2,7 @@ AITrainer 베타
 
 
 윈도우 환경에서 llama 훈련시 CMake설치 필요
+PYTHON 3.12버전 작동 확인인
 
 CMake
 https://cmake.org/download/
