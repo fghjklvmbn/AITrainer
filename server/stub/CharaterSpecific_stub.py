@@ -3,19 +3,19 @@ def CharaterSpecific(character_name, plot):
   "image_prompts": [
     {
       "character_name": "봄 정령",
-      "prompt": "A lively and lovely female spring spirit in a flowing pastel pink and green dress, surrounded by blooming cherry blossoms and fresh sprouts. She is smiling brightly, with flowers blooming under her touch. Her long hair waves like petals in the wind, and butterflies dance around her. Fantasy style, soft lighting, high detail, Studio Ghibli-inspired."
+      "prompt": "A cheerful and adorable young girl with flowing pink hair, dressed in a floral dress, surrounded by blooming flowers and fluttering butterflies."
     },
     {
       "character_name": "여름 정령",
-      "prompt": "A vibrant and energetic male summer spirit with sun-kissed skin and golden hair. He wears a sleeveless outfit made of glowing sunlight threads, standing in a lush orchard with ripe fruits hanging from trees. His arms are raised toward the sky, channeling solar energy. The scene is bright and radiant, with dynamic poses and a warm color palette. Anime fantasy style."
+      "prompt": "An energetic and lively boy with sun-kissed skin, wearing a bright yellow shirt and shorts, holding a basket of ripe fruits, with a radiant smile on his face."
     },
     {
       "character_name": "가을 정령",
-      "prompt": "A calm and warm-hearted female autumn spirit wearing a robe made of colorful fallen leaves. She has gentle eyes and carries a woven basket filled with harvest crops like pumpkins and apples. Around her, golden leaves swirl in the air, and the background shows a peaceful sunset over a field. Soft golden lighting, detailed textures, fantasy concept art."
+      "prompt": "A gentle and warm-hearted girl with long brown hair, dressed in a cozy sweater, sitting among piles of colorful leaves, with a warm cup of tea in her hands."
     },
     {
       "character_name": "겨울 정령",
-      "prompt": "A cold and serious male winter spirit in a long icy-blue cloak with fur trim. His presence makes snow fall gently around him. He holds a crystal staff that glows with frost magic. Nearby animals like a white fox and snow owl rest peacefully under his protective aura. Snow-covered forest setting, muted colors, fantasy realism, cinematic lighting."
+      "prompt": "A calm and serious boy with short white hair, wearing a warm coat and scarf, standing amidst a snowy landscape, with a gentle smile on his face, watching over a group of animals."
     }
   ]
 }
