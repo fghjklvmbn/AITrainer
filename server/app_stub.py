@@ -47,15 +47,15 @@ def write_detail():
 @app.route("/ai/StoryCreate/CharaterSpecific", methods=["POST"])
 def character_specific():
     data = request.get_json()
-    character_name = data.get("character_name", "")
-    plot = data.get("plot", "")
+    page = data.get("page", "")
+    detail = data.get("detail", "")
     
-    if not character_name:
-        return jsonify({"오류": "캐릭터(character_name) 항목은 필수 입니다."}), 400
-    if not plot:
-        return jsonify({"오류": "줄거리(plot) 항목은 필수 입니다."}), 400
+    if not page:
+        return jsonify({"오류": "페이지(page) 항목은 필수 입니다."}), 400
+    if not detail:
+        return jsonify({"오류": "페이지 내용(detail) 항목은 필수 입니다."}), 400
 
-    result = character_specific_stub(character_name, plot)
+    result = character_specific_stub(page, detail)
     return jsonify(result)
 
 
