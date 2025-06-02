@@ -31,15 +31,15 @@ def full_create():
 def write_detail():
     data = request.get_json()
 
-    createpage = data.get("page", "")
-    story_progression = data.get("story_progression", "")
+    page = data.get("page", "")
+    story = data.get("story", "")
     
-    if not createpage:
+    if not page:
         return jsonify({"오류": "페이지(page) 항목은 필수 입니다."}), 400
-    if not story_progression:
-        return jsonify({"오류": "스토리 진행(story_progression) 항목은 필수 입니다."}), 400
+    if not story:
+        return jsonify({"오류": "스토리(story) 항목은 필수 입니다."}), 400
     
-    result = write_detail_stub(createpage, story_progression)
+    result = write_detail_stub(page, story)
     return jsonify(result)
 
 
