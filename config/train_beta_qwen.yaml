@@ -1,7 +1,7 @@
 # 모델/데이터 경로/출력 경로 설정
 model_type: "qwen"
 model_name_or_path: "Qwen/Qwen2.5-0.5B"
-train_data_dir: "data/json_files/*.json"
+train_data_dir: "data/json_files/data_*.json"
 output_dir: "./checkpoints/qwen"
 output_model_dir : "output_dir/qwen/model"
 output_token_dir : "output_dir/qwen/token"

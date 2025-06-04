@@ -1,0 +1,38 @@
+동화 필체 : 한국전래동화
+
+1. 동화책 필체 학습
+
+한국전래동화
+{
+	"instruction": "한국전래동화 스타일의 문체로 이야기 써줘",
+	"input": "",
+	"output": "" 
+},
+
+독일동화
+{
+	"instruction": "독일동화 스타일의 문체로 이야기 써줘",
+	"input": "",
+	"output": ""
+},
+
+기타 문체 학습 
+{
+    "instruction": "동화 스타일을 기반으로 입력된것을 문체 학습하기", 
+    "input": "", 
+    "output": "지금도 누군가 용기를 내면, 은하수 다리가 반짝이며 나타난대요."
+}
+
+
+
+
+2. 동화책 생성 학습
+[
+{
+    "instruction": "동화 스토리 생성",
+    "input": "prompt : \n tag : [...]",
+    "output" : "world: ,\n genre: ,\n characters: [{ character_name: , gender: , personality: , ability: , main_character: } \n ], \n plot: , \n story_progression: , \n tags: [...] \n
+},
+...
+
+]
