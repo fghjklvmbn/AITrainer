@@ -11,6 +11,8 @@ HuggingFace 기반의 학습도구(transformer, peft, datasets)로 제작되었�
  - beomi/KoAlpaca-llama-1-7b
  - Qwen/Qwen2.5-0.5B
  - Qwen/Qwen2.5-7B
+ - Qwen/Qwen2.5-32B  
+
 
 **준비사항**
  - 아나콘다(권장)
