@@ -1,73 +1,80 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
-import torch
-import json
+import os
+os.environ["HF_HOME"] = "/data/wonderland/beta/huggingface/"
 
-# 1. 사용할 모델명 설정
-MODEL_NAME = "Qwen/Qwen2.5-3B"
+from transformers import AutoModelForCausalLM, AutoTokenizer
+model_name = "Qwen/Qwen3-4B"
 
-# 2. 모델 및 토크나이저 로드
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+# load the tokenizer and the model
+tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(
-    MODEL_NAME,
-    torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+    model_name,
+    torch_dtype="auto",
     device_map="auto"
 )
 
-# 3. 생성 파이프라인 정의
-generator = pipeline("text-generation", model=model, tokenizer=tokenizer)
+user_input = input("동화에 넣을 내용을 입력하세요: ")
 
-# 4. 테스트용 프롬프트
-base_prompt = """다음 내용을 기반으로 어린이용 동화 설정 정보를 JSON 형식으로 생성해줘.
+# prepare the model input
+prompt = """
+사용자 작성 내용 : """ + user_input + """ 
 
-프롬프트 :  
-"사계절이 동시에 존재하는 마법의 숲, 에르델에는 봄, 여름, 가을, 겨울의 정령이 살고 있어, 여기서 무슨일이 일어나는데, 그것에 대한 과정의 동화"
-
-구조 : 
+출력 구조 : 
 {
-  "world": "",
-  "genre": "",
-  "characters": [
-    {
-      "character_name": "이름",
-      "gender": "성별",
-      "personality": "성격",
-      "ability": "능력",
-      "main_character": true 또는 false
-    },
-    ...
-  ],
-  "plot": "",
-  "story_progression": "",
-  "tags": ["", "", ""]
+	"world": 세계관
+    "genre": 장르,
+	"characters" : [
+		{ 
+  		"character_name": 등장인물의 이름
+		"gender": 등장인물 성별
+		"personality": 등장인물 성격
+		"ability": 등장인물의 능력
+		"main_character": 등장인물의 주인공 여부
+  		}, ...
+	],
+	"plot": 대략적인 줄거리,
+	"story_progression": 대략적인 스토리 전개방향,
+	"tags": [태그1, 태그2, 태그3, ...]
 }
 
-규칙:
-- 세계관은 위 프롬프트 내용을 기반으로 작성
-- 장르는 반드시 하나 만 포함
-- 등장인물은 어린이 이해 가능한 성격과 능력 포함
-- plot은 3~5줄, story_progression도 3~5줄
-- tags는 반드시 3개
-- 능력은 상황에 따라 다르게 활용되어야 하며, 캐릭터는 유머러스하고 매력 있어야 함
-- 출력은 반드시 JSON 형식으로 출력
-- 모든 키와 값 사이에는 쉼표가 있어야 함 (JSON 문법 오류 없이)
-- 예시를 보여줄 때 JSON 구문 오류가 없도록 주의할 것
+
+규칙 : 
+- 사용자 작성 내용의 요약을 바탕으로 세계관을 생성
+- 세계관은 간단한 문장으로 생성성
+- 장르는 "판타지", "우화", "교훈", "모험", "생태", "감성", "교육" 중에 관련있는 것을 하나만 선택
+- 등장인물들은 어린이들이 이해할 수 있는 성격, 능력, 이름, 등장 배경 등을 포함
+- 등장인물은 사람이름 단위으로 구분
+- 주인공 여부는 중복 가능, 단, 등장인물이 출연하는 빈도가 80% 이상이여야 함
+- plot(줄거리)는 3~5줄로 작성
+- story_progression(이야기 전개 과정)는 3~5줄로 작성
+- tags(상징하는 태그, 3개)는 3개로 작성
+- 동화의 특징은 전개가 자연스럽고, 이야기가 흥미롭고, 캐릭터가 유머러스하고, 이야기가 흥미로운, 상징적인 요소가 포함되어야 한다
+- 캐릭터의 능력은 상황에 따라 다르게 활용되어야 한다
+- 등장인물의 능력은 상황에 따라 다르게 활용되어야 한다
+- python 코드 등 코드형식이 아니라 반드시 JSON형식으로 출력해야 함
+- 내용은 한국어로 작성해야함
+- 출력 구조를 참고해서 맞게 작성해야함함
+- 1번만 출력해야함
+
+위 구조와 규칙을 기준으로 사용자 작성 내용을 반영하여 json형식으로 출력해줘
 """
 
+messages = [
+    {"role": "user", "content": prompt}
+]
+text = tokenizer.apply_chat_template(
+    messages,
+    tokenize=False,
+    add_generation_prompt=True,
+    enable_thinking=True # Switches between thinking and non-thinking modes. Default is True.
+)
+model_inputs = tokenizer([text], return_tensors="pt").to(model.device)
 
-# 6. 반복 실행
-NUM_SAMPLES = 1
-results = []
+# conduct text completion
+generated_ids = model.generate(
+    **model_inputs,
+    max_new_tokens=32768
+)
+output_ids = generated_ids[0][len(model_inputs.input_ids[0]):].tolist() 
 
-for i in range(NUM_SAMPLES):
-    print(f"\n=== Sample {i+1} ===")
-    output = generator(
-        base_prompt,
-        max_new_tokens=1024,
-        do_sample=True,
-        top_k=50,
-        temperature=0.8,
-        num_return_sequences=1
-    )
-
-    response_text = output[0]["generated_text"]
-    generated_part = response_text.replace(base_prompt, "").strip()
+# the result will begin with thinking content in <think></think> tags, followed by the actual response
+print(tokenizer.decode(output_ids, skip_special_tokens=True))
