@@ -1,71 +1,50 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
 class Chatbot:
-    def __init__(self, model_name="Qwen/Qwen3-1.7B"):
-        self.model_name = model_name
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModelForCausalLM.from_pretrained(model_name).to("cuda" if torch.cuda.is_available() else "cpu")
-        self.history = []  # 대화 기록: [{"role": "user", "content": "..."}, ...]
+    def __init__(self, model_path="Qwen/Qwen3-1.7B"):
+        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
+        self.model = AutoModelForCausalLM.from_pretrained(
+            model_path,
+            torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+            device_map="auto"
+        )
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
+        self.model.to(self.device)
+        self.history = []  # 대화 기록 저장
 
-    def format_history(self):
-        """대화 기록을 모델 입력 형식으로 변환"""
-        prompt = ""
-        for msg in self.history:
-            if msg["role"] == "user":
-                prompt += f"User: {msg['content']}\n"
-            else:
-                prompt += f"Assistant: {msg['content']}\n"
-        prompt += "Assistant: "
-        return prompt
-
-    # def generate_response(self, user_input):
-    #     """사용자 입력을 기반으로 응답 생성"""
-    #     self.history.append({"role": "user", "content": user_input})
-    #     prompt = self.format_history()
-        
-    #     inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
-    #     outputs = self.model.generate(
-    #         inputs["input_ids"],
-    #         max_length=128,
-    #         num_return_sequences=1,
-    #         temperature=0.7,
-    #         top_p=0.95,
-    #         do_sample=True
-    #     )
-    #     response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
-        
-    #     # 응답을 대화 기록에 추가
-    #     assistant_response = response[len(prompt):].strip()
-    #     self.history.append({"role": "assistant", "content": assistant_response})
-    #     return assistant_response
-
-    def generate_response(self, user_input):
-        self.history.append({"role": "user", "content": user_input})
-        prompt = self.format_history()
-
-        inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
-        outputs = self.model.generate(
-            inputs["input_ids"],
-            max_length=inputs["input_ids"].shape[1] + 200,
-            temperature=0.7,
-            top_p=0.95,
-            do_sample=True,
-            pad_token_id=self.tokenizer.eos_token_id  # pad_token 지정
+    def format_prompt(self):
+        """이전 대화 기록을 기반으로 프롬프트 생성"""
+        return self.tokenizer.apply_chat_template(
+            self.history,
+            tokenize=False,
+            add_generation_prompt=True,
+            enable_thinking=True
         )
 
-        full_output = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
-    
-        # 프롬프트 이후의 응답만 추출
-        if full_output.startswith(prompt):
-            assistant_response = full_output[len(prompt):].strip()
-        else:
-            # fallback: 전체에서 마지막 Assistant 이후 부분 추출
-            assistant_response = full_output.split("Assistant:")[-1].strip()
-
-        self.history.append({"role": "assistant", "content": assistant_response})
-        return assistant_response
-
-    def reset(self):
-        """대화 기록 초기화"""
-        self.history = []
+    def chat(self, user_input):
+        """사용자 입력을 받아 대화 기록을 업데이트하고, 모델로 응답 생성"""
+        # 사용자 메시지 추가
+        self.history.append({"role": "user", "content": user_input})
+        
+        # 프롬프트 생성
+        text = self.format_prompt()
+        
+        # 토큰화
+        model_inputs = self.tokenizer([text], return_tensors="pt").to(self.model.device)
+        
+        # 텍스트 생성
+        generated_ids = self.model.generate(
+            **model_inputs,
+            temperature=0.5,
+            max_new_tokens=32768
+        )
+        
+        # 생성된 응답 추출
+        output_ids = generated_ids[0][len(model_inputs.input_ids[0]):].tolist()
+        response = self.tokenizer.decode(output_ids, skip_special_tokens=True).strip()
+        
+        # 응답 추가
+        self.history.append({"role": "assistant", "content": response})
+        
+        return response
