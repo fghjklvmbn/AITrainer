@@ -21,7 +21,7 @@ model = AutoModelForCausalLM.from_pretrained(
 device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 model.to(device)
 
-# 짧은 줄거리를 바탕으로 이야기를 생성해내는 프롬프트
+# 사용자 프롬프트
 def format_prompt(data):
     return ""
 
