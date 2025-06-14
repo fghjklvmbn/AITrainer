@@ -1,4 +1,4 @@
-import torch
+import torch, re
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 class Chatbot:
@@ -13,6 +13,9 @@ class Chatbot:
         self.model.to(self.device)
         self.history = []  # 대화 기록 저장
 
+    def strip_think_tags(text: str) -> str:
+        return re.sub(r"user.*?</think>\n*", "", text, flags=re.DOTALL)
+    
     def format_prompt(self):
         """이전 대화 기록을 기반으로 프롬프트 생성"""
         return self.tokenizer.apply_chat_template(
@@ -41,10 +44,9 @@ class Chatbot:
         )
         
         # 생성된 응답 추출
-        output_ids = generated_ids[0][len(model_inputs.input_ids[0]):].tolist()
-        response = self.tokenizer.decode(output_ids, skip_special_tokens=True).strip()
-        
+        response = self.tokenizer.decode(generated_ids[0], skip_special_tokens=True)
         # 응답 추가
         self.history.append({"role": "assistant", "content": response})
-        
+
+        response = self.strip_think_tags(response)  # think 태그 제거
         return response

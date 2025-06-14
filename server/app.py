@@ -76,14 +76,17 @@ def character_spec():
 
 # (베타) 챗봇 대화 기능
 def chat():
-    data = request.json
-    user_input = data.get("input", "")
-
+    data = request.get_json()
+    user_input = data.get('input', '')
+    
     if not user_input:
-        return jsonify({"error": "입력이 없습니다."}), 400
+        return jsonify({'error': 'Empty input'}), 400
 
-    response = chatbot.generate_response(user_input)
-    return jsonify({"response": response})
+    try:
+        response = chatbot.chat(user_input)
+        return jsonify({'response': response})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 def reset():
     chatbot.reset()
