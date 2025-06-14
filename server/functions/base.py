@@ -23,18 +23,10 @@ model.to(device)
 
 # 짧은 줄거리를 바탕으로 이야기를 생성해내는 프롬프트
 def format_prompt(data):
-    return """
-    사용자 작성 내용 : """ + data + """
-
-    출력 구조 : 
-    
-    규칙 : 
-    
-    위 구조와 규칙을 기준으로 사용자 작성 내용을 반영하여 json형식으로 출력해줘
-    """
+    return ""
 
 
-def write_detail_story(data):
+def chatbot(data):
     prompt = format_prompt(data)
     messages = [
         {"role": "user", "content": prompt}
