@@ -1,9 +1,9 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from peft import PeftModel
+# from peft import PeftModel
 
 # 기본 모델(Base Model) 경로
-base_model_path = "Qwen/Qwen2.5-0.5B"  # 기본 모델 경로 (예: Llama 7B)
+base_model_path = "Qwen/Qwen3-1.7B"  # 기본 모델 경로 (예: Llama 7B)
 
 # 토크나이저 로드
 tokenizer = AutoTokenizer.from_pretrained(base_model_path)
@@ -16,36 +16,38 @@ model = AutoModelForCausalLM.from_pretrained(
 )
 
 # Adapter Model 로드
-model = PeftModel.from_pretrained(model, "./storybook_model")
+# model = PeftModel.from_pretrained(model, "./storybook_model")
 
 device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 model.to(device)
 
+# 짧은 줄거리를 바탕으로 이야기를 생성해내는 프롬프트
 def format_prompt(data):
-    return (
-        """
-사용자 작성 내용 : "사계절이 동시에 존재하는 마법의 숲, 에르델에는 봄, 여름, 가을, 겨울의 정령이 살고 있어, 여기서 무슨일이 일어나는데, 그것에 대한 과정의 동화" 를 
+    return """
+사용자 작성 내용 : """ + data + """ 
 
-구조 : 
+출력 구조 : 
 {
-	"world": "세계관"
-    "genre": "장르",
+	"world": 세계관
+    "genre": 장르,
 	"characters" : [
 		{ 
-  		"character_name": "등장인물의 이름"
-		"gender": "등장인물 성별"
-		"personality": "등장인물 성격"
-		"ability": "등장인물의 능력"
-		"main_character": "등장인물의 주인공 여부"
+  		"character_name": 등장인물의 이름
+		"gender": 등장인물 성별
+		"personality": 등장인물 성격
+		"ability": 등장인물의 능력
+		"main_character": 등장인물의 주인공 여부
   		}, ...
-	]
-	"plot": "대략적인 줄거리"
-	"story_progression": "대략적인 스토리 전개방향"
+	],
+	"plot": 대략적인 줄거리,
+	"story_progression": 대략적인 스토리 전개방향,
 	"tags": [태그1, 태그2, 태그3, ...]
 }
 
+
 규칙 : 
 - 사용자 작성 내용의 요약을 바탕으로 세계관을 생성
+- 세계관은 간단한 문장으로 생성성
 - 장르는 "판타지", "우화", "교훈", "모험", "생태", "감성", "교육" 중에 관련있는 것을 하나만 선택
 - 등장인물들은 어린이들이 이해할 수 있는 성격, 능력, 이름, 등장 배경 등을 포함
 - 등장인물은 사람이름 단위으로 구분
@@ -57,23 +59,34 @@ def format_prompt(data):
 - 캐릭터의 능력은 상황에 따라 다르게 활용되어야 한다
 - 등장인물의 능력은 상황에 따라 다르게 활용되어야 한다
 - python 코드 등 코드형식이 아니라 반드시 JSON형식으로 출력해야 함
-- 반복문 금지
-- 어떠한 다른말도 금지
+- 내용은 한국어로 작성해야함
+- 출력 구조를 참고해서 맞게 작성해야함함
+- 1번만 출력해야함
+- custom_tag을 이용해 사용자가 원하는 스토리 지향점을 맞춰야 함.
 
 위 구조와 규칙을 기준으로 사용자 작성 내용을 반영하여 json형식으로 출력해줘
 """
-    )
 
 
-def generate_story(data):
+def write_detail_story(data):
     prompt = format_prompt(data)
-    inputs = tokenizer(prompt, return_tensors="pt").to(device)
-    outputs = model.generate(
-        **inputs,
-        max_new_tokens=2048,
-        do_sample=True,
-        temperature=0.6,
-        top_p=0.9
+    messages = [
+        {"role": "user", "content": prompt}
+    ]
+    text = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True,
+        enable_thinking=True # Switches between thinking and non-thinking modes. Default is True.
     )
-    return tokenizer.decode(outputs[0], skip_special_tokens=True)
+    model_inputs = tokenizer([text], return_tensors="pt").to(model.device)
+
+    # conduct text completion
+    generated_ids = model.generate(
+        **model_inputs,
+        temperature=0.5,
+        max_new_tokens=32768
+    )
+    output_ids = generated_ids[0][len(model_inputs.input_ids[0]):].tolist() 
+    return tokenizer.decode(output_ids, skip_special_tokens=True).strip()
 

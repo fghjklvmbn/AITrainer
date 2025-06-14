@@ -1,9 +1,9 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from peft import PeftModel
+# from peft import PeftModel
 
 # 기본 모델(Base Model) 경로
-base_model_path = "Qwen/Qwen2.5-7B"  # 기본 모델 경로 (예: Llama 7B)
+base_model_path = "Qwen/Qwen3-1.7B"  # 기본 모델 경로 (예: Llama 7B)
 
 # 토크나이저 로드
 tokenizer = AutoTokenizer.from_pretrained(base_model_path)
@@ -16,31 +16,53 @@ model = AutoModelForCausalLM.from_pretrained(
 )
 
 # Adapter Model 로드
-model = PeftModel.from_pretrained(model, "./storybook_model")
+# model = PeftModel.from_pretrained(model, "./storybook_model")
 
 device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 model.to(device)
 
-# 동화의 줄거리를 바탕으로 문장을 재구성 하는 프롬프트
-def format_prompt(data1, data2):
-    return (
-        "너는 지금부터 이야기 작가야.\n"
-        "프롬프트를 기반으로 문장을 수정해서 json형태로 출력해야되 :\n"
-        "전체 스토리 : " + {data1} + "\n"
-        "프롬프트 : " + {data2} + "\n"
-        "결과 :"
-    )
+# 짧은 줄거리를 바탕으로 이야기를 생성해내는 프롬프트
+def format_prompt(data):
+    return """
+사용자 작성 내용 : """ + data + """ 
+
+출력 구조 : 
+{
+	"status": "수정 완료",
+    "recreate_text": "{수정된 텍스트}",
+}
 
 
-def modify_story(data1, data2):
-    prompt = format_prompt(data1, data2)
-    inputs = tokenizer(prompt, return_tensors="pt").to(device)
-    outputs = model.generate(
-        **inputs,
-        max_length=150,
-        temperature=0.7,
-        top_p=0.9,
-        do_sample=True,
+규칙 : 
+- 출력 구조를 참고해서 맞게 작성해야함
+- status는 고정값이므로 그대로 둬야함
+- "text"를 위의 페이지별 이야기를 참조해서 수정하여 recreate_text으로 다시 수정시켜야 함.
+- 글의 흐름과 맥락에 따라가야 함.(예를들어 5페이지가 일치한다면, 글의 마지막부분을 장식히므로 이에 대한 내용을 작성)
+- 1번만 출력해야함
+
+위 구조와 규칙을 기준으로 사용자 작성 내용을 반영하여 json형식으로 출력해줘
+"""
+
+
+def write_detail_story(data):
+    prompt = format_prompt(data)
+    messages = [
+        {"role": "user", "content": prompt}
+    ]
+    text = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True,
+        enable_thinking=True # Switches between thinking and non-thinking modes. Default is True.
     )
-    return tokenizer.decode(outputs[0], skip_special_tokens=True)
+    model_inputs = tokenizer([text], return_tensors="pt").to(model.device)
+
+    # conduct text completion
+    generated_ids = model.generate(
+        **model_inputs,
+        temperature=0.5,
+        max_new_tokens=32768
+    )
+    output_ids = generated_ids[0][len(model_inputs.input_ids[0]):].tolist() 
+    return tokenizer.decode(output_ids, skip_special_tokens=True).strip()
 
