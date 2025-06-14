@@ -1,9 +1,8 @@
 from transformers import MBartForConditionalGeneration, MBart50TokenizerFast
 
 # 모델 및 토크나이저 로딩
-model_name = "facebook/mbart-large-50-many-to-many-mmt"
-tokenizer = MBart50TokenizerFast.from_pretrained(model_name)
-model = MBartForConditionalGeneration.from_pretrained(model_name)
+model = None
+tokenizer = None
 
 # 언어 코드 매핑
 LANG_CODE_MAP = {
@@ -15,6 +14,13 @@ LANG_CODE_MAP = {
     "de": "de_DE"
 }
 
+def load_model():
+    model_name = "facebook/mbart-large-50-many-to-many-mmt"
+    tokenizer = MBart50TokenizerFast.from_pretrained(model_name)
+    model = MBartForConditionalGeneration.from_pretrained(model_name)
+    return tokenizer, model
+
+
 def translate_text(text, target_language):
     """
     MBart50을 사용한 번역 함수
@@ -22,6 +28,8 @@ def translate_text(text, target_language):
     :param target_language: 목적 언어 (ISO 코드, 예: 'en', 'fr')
     :return: 번역된 문자열
     """
+    tokenizer,model = load_model()
+    
     src_lang = "ko"  # 현재 기준은 한국어 입력 고정
     tgt_lang = target_language.lower()
 

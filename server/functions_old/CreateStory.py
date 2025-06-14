@@ -12,7 +12,7 @@ tokenizer = AutoTokenizer.from_pretrained(base_model_path)
 model = AutoModelForCausalLM.from_pretrained(
     base_model_path,
     torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-    device_map="auto"
+    device_map=torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 )
 
 # Adapter Model 로드
@@ -22,29 +22,12 @@ device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.ba
 model.to(device)
 
 # 짧은 줄거리를 바탕으로 이야기를 생성해내는 프롬프트
-def format_prompt(data):
-    return """
-사용자 작성 내용 : """ + data + """ 
-
-출력 구조 : 
-{
-	"status": "수정 완료",
-    "recreate_text": "{수정된 텍스트}",
-}
+def format_prompt(data, templete):
+    prompt = """사용자 작성내용 : """ + data + templete
+    return prompt
 
 
-규칙 : 
-- 출력 구조를 참고해서 맞게 작성해야함
-- status는 고정값이므로 그대로 둬야함
-- "text"를 위의 페이지별 이야기를 참조해서 수정하여 recreate_text으로 다시 수정시켜야 함.
-- 글의 흐름과 맥락에 따라가야 함.(예를들어 5페이지가 일치한다면, 글의 마지막부분을 장식히므로 이에 대한 내용을 작성)
-- 1번만 출력해야함
-
-위 구조와 규칙을 기준으로 사용자 작성 내용을 반영하여 json형식으로 출력해줘
-"""
-
-
-def write_detail_story(data):
+def generate_story(data):
     prompt = format_prompt(data)
     messages = [
         {"role": "user", "content": prompt}

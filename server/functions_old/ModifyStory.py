@@ -12,7 +12,7 @@ tokenizer = AutoTokenizer.from_pretrained(base_model_path)
 model = AutoModelForCausalLM.from_pretrained(
     base_model_path,
     torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-    device_map="auto"
+    device_map=torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 )
 
 # Adapter Model 로드
@@ -22,34 +22,11 @@ device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.ba
 model.to(device)
 
 # 짧은 줄거리를 바탕으로 이야기를 생성해내는 프롬프트
-def format_prompt(data):
-    return  """
-사용자 작성 내용 : """ + data + """ 
+def format_prompt(data, templete):
+    prompt = """사용자 작성내용 : """ + data + templete
+    return prompt
 
-출력 구조 : 
-{
-  "image_prompts": [
-    {
-      "character_name": 등장인물 이름,
-      "prompt": 등장인물 모습
-    },
-    ...
-    ]
-}
-
-
-규칙 : 
-- 세계관(world), 장르(genre) 를 기반으로 작성해야함
-- prompt는 영어로 작성되어야만 함
-- 페이지에 맞는 묘사를 해서 stable diffusion 같은 이미지 생성 모델에 처리하기 최적화 하도록 작성해야함
-- python 코드 등 코드형식이 아니라 반드시 JSON형식으로 출력해야 함
-- 최대한 자세하게 길게 묘사해야함
-
-위 사용자 작성 내용, 출력 구조 그리고 규칙을 참고해서 출력으로 구체적인 묘사를 하는 출력구조로 만들어줘
-"""
-
-
-def write_detail_story(data):
+def modify_story(data):
     prompt = format_prompt(data)
     messages = [
         {"role": "user", "content": prompt}

@@ -12,7 +12,7 @@ tokenizer = AutoTokenizer.from_pretrained(base_model_path)
 model = AutoModelForCausalLM.from_pretrained(
     base_model_path,
     torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-    device_map="auto"
+    device_map=torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 )
 
 # Adapter Model 로드
@@ -22,33 +22,12 @@ device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.ba
 model.to(device)
 
 # 짧은 줄거리를 바탕으로 이야기를 생성해내는 프롬프트
-def format_prompt(data):
-    return """사용자 작성내용 : """ + data + """ 
-
-출력구조 : {
-    "pages_text": [
-        {
-            "number": 1,
-            "text": 각 페이지 내용
-        },
-		...
-    ]
-}
+def format_prompt(data, templete):
+    prompt = """사용자 작성내용 : """ + data + templete
+    return prompt
 
 
-규칙 : 
-- age 항목을 참고해서 수준에 맞게 써야함
-- age 항목을 참고해서 페이지 길이를 유동적으로 조절해야함
-- page 항목을 꼭 준수 해야함.
-- 세계관, 등장인물, 줄거리, 태그를 참고하여 작성해야함.
-- age가 14 이하일 경우 "~어요" 체나 "~요" 체로 작성해야함. 
-- language 항목을 참고해서 출력할 때 언어를 조정해야함.
-
-위 사용자 작성 내용, 출력 구조 그리고 규칙을 토대로 이야기를 써줘
-"""
-
-
-def write_detail_story(data):
+def character_spec(data):
     prompt = format_prompt(data)
     messages = [
         {"role": "user", "content": prompt}
