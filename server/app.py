@@ -90,7 +90,7 @@ def character_spec():
 
 # 등장인물 자세한 정보 생성
 @app.route("/ai/StoryCreate/artprompt/", methods=["POST"])
-def character_spec():
+def artprompt():
     prompt = request.get_json()
 
     # JSON을 예쁘게 포맷해서 문자열로 만들기
