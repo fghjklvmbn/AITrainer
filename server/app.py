@@ -79,7 +79,28 @@ def character_spec():
     wrapped_json = f'"""{pretty_json}"""'
 
     # 전용 템플릿 전달
-    templete = path + "\\function\\templete\\charspec.txt"
+    templete = path + "\\functions\\templete\\charspec.txt"
+
+    if not prompt:
+        return jsonify({"오류": "프롬프트(prompt) 항목은 필수 입니다."}), 400
+    
+    result = generate(wrapped_json, templete)
+    first_parse = json.loads(result)     # result: 문자열
+    return jsonify(first_parse)
+
+# 등장인물 자세한 정보 생성
+@app.route("/ai/StoryCreate/artprompt/", methods=["POST"])
+def character_spec():
+    prompt = request.get_json()
+
+    # JSON을 예쁘게 포맷해서 문자열로 만들기
+    pretty_json = json.dumps(prompt, ensure_ascii=False, indent=4)
+
+    # 삼중 따옴표로 감싸기
+    wrapped_json = f'"""{pretty_json}"""'
+
+    # 전용 템플릿 전달
+    templete = path + "\\functions\\templete\\charspec.txt"
 
     if not prompt:
         return jsonify({"오류": "프롬프트(prompt) 항목은 필수 입니다."}), 400
@@ -115,6 +136,10 @@ def translate():
 
     translated_text = translate_text(text, target_language)
     return jsonify({"translated_text": translated_text})
+
+@app.route("/ai/StoryCreate/", methods=["GET"])
+def index():
+    return jsonify({"message": "정상작동"}), 200
 
 
 if __name__ == "__main__":
