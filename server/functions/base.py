@@ -17,15 +17,13 @@ def load_model():
         model = AutoModelForCausalLM.from_pretrained(
             base_model_path,
             torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-            device_map="cuda"
-            # torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
+            device_map=torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
         )
 
         # Adapter Model 로드
         # model = PeftModel.from_pretrained(model, "./storybook_model")
 
-        device = "cuda"
-        # torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
+        device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
         model.to(device)
 
     return model, tokenizer
@@ -55,7 +53,7 @@ def generate(data, templete):
         messages,
         tokenize=False,
         add_generation_prompt=True,
-        enable_thinking=True # Switches between thinking and non-thinking modes. Default is True.
+        enable_thinking=False # Switches between thinking and non-thinking modes. Default is True.
     )
     model_inputs = tokenizer([text], return_tensors="pt").to(model.device)
 

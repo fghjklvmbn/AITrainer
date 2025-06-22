@@ -3,7 +3,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 # from peft import PeftModel
 
 # 기본 모델(Base Model) 경로
-base_model_path = "Qwen/Qwen2.5-32B"  # 기본 모델 경로 (예: Llama 7B)
+base_model_path = "Qwen/Qwen3-4B"  # 기본 모델 경로 (예: Llama 7B)
 
 # 토크나이저 로드
 tokenizer = AutoTokenizer.from_pretrained(base_model_path)

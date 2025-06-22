@@ -1,6 +1,6 @@
 # 모델/데이터 경로/출력 경로 설정
 model_type: "qwen"
-model_name_or_path: "Qwen/Qwen2.5-0.5B"
+model_name_or_path: "Qwen/Qwen3-1.7B"
 train_data_dir: "data/json_files/data_*.json"
 output_dir: "./checkpoints/qwen"
 output_model_dir : "output_dir/qwen/model"
@@ -11,9 +11,9 @@ batch_size: 1
 epochs: 1
 learning_rate: 0.0002
 seed: 42
-max_length: 128
+max_length: 64
 split_size: 0.00015
-fp16: true
+fp16: True
 
 #LoRA 설정
 lora_r: 8

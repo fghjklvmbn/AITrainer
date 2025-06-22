@@ -15,9 +15,11 @@ LANG_CODE_MAP = {
 }
 
 def load_model():
-    model_name = "facebook/mbart-large-50-many-to-many-mmt"
-    tokenizer = MBart50TokenizerFast.from_pretrained(model_name)
-    model = MBartForConditionalGeneration.from_pretrained(model_name)
+    global model, tokenizer
+    if model is not None and tokenizer is not None:
+        model_name = "facebook/mbart-large-50-many-to-many-mmt"
+        tokenizer = MBart50TokenizerFast.from_pretrained(model_name)
+        model = MBartForConditionalGeneration.from_pretrained(model_name)
     return tokenizer, model
 
 

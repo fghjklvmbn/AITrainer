@@ -6,8 +6,6 @@ import os, json
 
 # 현재 파일 위치
 path = os.getcwd()
-print(path)
-
 app = Flask(__name__)
 
 # 전체적인 이야기 생성
@@ -134,14 +132,14 @@ def create_new():
 @app.route("/ai/chat", methods=["POST"])
 def chatting():
     data = request.get_json()
-    user_input = data.get('input', '')
+    user_input = data.get('prompt', '')
     
     if not user_input:
-        return jsonify({'error': 'Empty input'}), 400
+        return jsonify({'error': '질문이 비어있습니다. 다시 입력해주세요'}), 400
 
     try:
         response = chat(user_input)
-        return jsonify({'response': response})
+        return jsonify({'output': response})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -158,10 +156,9 @@ def translate():
     translated_text = translate_text(text, target_language)
     return jsonify({"translated_text": translated_text})
 
-@app.route("/ai/StoryCreate/", methods=["GET"])
+@app.route("/ai/StoryCreate", methods=["GET"])
 def index():
     return jsonify({"message": "정상작동"}), 200
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=3000, debug=True)

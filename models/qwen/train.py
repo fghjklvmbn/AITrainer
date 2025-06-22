@@ -12,7 +12,10 @@ def build_trainer(config, train_dataset, val_dataset, training_args):
         config["model_name_or_path"],
         device_map="auto",
         torch_dtype=torch.float16,
+        bnb_4bit_quant_type="fp4",       # 또는 "fp4"
+        bnb_4bit_compute_dtype=torch.bfloat16,  # float16/bfloat16/float32 중 선택
         trust_remote_code=True,
+        load_in_4bit=True 
     )
     tokenizer = AutoTokenizer.from_pretrained(
         config["model_name_or_path"],
@@ -21,6 +24,12 @@ def build_trainer(config, train_dataset, val_dataset, training_args):
 
     # --- LoRA 설정
     model = prepare_model_for_kbit_training(model)
+    model.enable_input_require_grads()  # MPS/GPU 혼합환경 시 필요 시추가
+    model.gradient_checkpointing_enable(
+        gradient_checkpointing_kwargs={"use_reentrant": False}
+    )
+    model.config.use_cache = False
+
     lora_config = LoraConfig(
         r=config.get("lora_r", 8),
         lora_alpha=config.get("lora_alpha", 16),
@@ -44,6 +53,9 @@ def build_trainer(config, train_dataset, val_dataset, training_args):
     # 신 평가 지표 계산 함수
     def compute_metrics(eval_pred):
         predictions, labels = eval_pred
+
+        if predictions.ndim == 3:  # generate이 반환하는 경우
+            predictions = predictions.argmax(axis=-1)
 
         # 디코딩
         decoded_preds = tokenizer.batch_decode(predictions, skip_special_tokens=True)
